@@ -8,6 +8,9 @@ $(document).ready(function() {
 	setupUI();
 	setupEvents();
 	
+	//Hide the loading screen
+	$('.lightbox_bg').hide();
+	$('.modal').hide();	
 });
 
 // Initializes the interface and fetches any data from the server
@@ -20,7 +23,7 @@ function initialize() {
 	
 	//TODO: Remove the loading screen after the actual loading is finished, 
 	//for now just display it for a set interval
-	setTimeout(function() { $('.lightbox_bg').remove(); $('.modal').remove(); }, 5 * 1000);
+	//setTimeout(function() { $('.lightbox_bg').remove(); $('.modal').remove(); }, 5 * 1000);
 }
 
 function setupUI() {
