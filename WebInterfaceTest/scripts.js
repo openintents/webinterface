@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	
-	//initialize();
+	initialize();
 	$('div').filter(function() {
 		return this.id.match(/content-[^home].*/);
 	}).hide();
@@ -51,7 +51,8 @@ function setupEvents() {
 	});
 	
 	// Expand contents when a note is clicked
-	$('.table-list tr td a').click(function() {
+	$('.table-list tr td a').on('click.#', function(e) {
+		e.preventDefault();
 		var current = $(this).parent().children('.table-hide');
 		if(current.attr('class').indexOf('table-hide-shown') != -1) // Element is current displayed
 		{
