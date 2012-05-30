@@ -60,6 +60,10 @@ hr {
 	color: #666;
 }
 
+#wrap-content {
+
+}
+
 #nav {
 	background-color: #eaeaea;
 	border-radius: 5px;
@@ -121,10 +125,6 @@ hr {
 .active a {
 	color: #fff !important;
 	border-color: transparent !important;
-}
-
-#wrap-content {
-
 }
 
 #content {
