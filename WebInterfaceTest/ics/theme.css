@@ -61,6 +61,7 @@ hr {
 	text-decoration:none; 
 	color:#fff; 
 	text-align:center;
+	display: block;
 }
 
 #menu img {
@@ -106,6 +107,7 @@ hr {
 	min-height: 3em;
 	border-bottom: 1px solid #2e2e2e;
 	margin: 0;
+	list-style: none;
 }
 
 #nav ul li a, #nav ul li a:visited {

@@ -1,0 +1,67 @@
+#header {
+	min-height: 3em;
+}
+
+#logo {
+	padding: 0;
+}
+
+#menu {
+	margin-top: 3px;
+}
+
+#menu ul {
+	list-style: none;
+}
+
+#menu ul li {
+	
+}
+
+#wrap-content {
+	padding: 0;
+}
+
+#main-content {
+
+}
+
+#nav ul {
+	list-style: none;
+}
+
+/* Classes */
+
+.left {
+	float: left;
+}
+
+.right {
+	float:right;
+}
+
+.clear {
+	clear: both;
+}
+
+.table-list {
+	width: 100%;
+	text-align: left;
+	padding: 10px;
+}
+
+.table-list tr {
+	border-bottom: 2px solid #0d0d0d;
+}
+
+.table-list a {
+	display: block;
+	padding: 10px;
+}
+
+.table-hide {
+	border-radius: 5px;
+	padding: 10px;
+	display: none;
+	width: inherit !important;
+}

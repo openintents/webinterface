@@ -1,6 +1,10 @@
 $(document).ready(function() {
 	
-	initialize();
+	//initialize();
+	
+	$('.nav-active').show();
+	$('#nav-home').parent().addClass('nav-active'); // Set home as the default active link
+	
 	$('div').filter(function() {
 		return this.id.match(/content-[^home].*/);
 	}).hide();
@@ -28,26 +32,34 @@ function initialize() {
 
 function setupUI() {
 	
-	$('.active').show();
-	$('#nav-home').parent().addClass('active'); // Set home as the default active link
+	/*$('.active').show();
+	$('#nav-home').parent().addClass('active'); // Set home as the default active link*/
 	
-	$('.table-hide').append('<hr/><button class="button-note-edit button-edit">Edit</button>'+
-							'<button class="button-note-save button-save">Save</button>'+
-							'<button class="button-note-cancel button-cancel">Cancel</button>');
-	$('button').button();
+	$('.table-hide').append('<hr/><button class="button-note-edit button-edit btn">Edit</button>'+
+							'<button class="button-note-save button-save btn">Save</button>'+
+							'<button class="button-note-cancel button-cancel btn">Cancel</button>');
+	
+	var navcontent = '<div class="nav-content"><button class="btn" data-switch="home">&larr; Back</button></div>';
+	
+	$('div').filter(function() {
+		return this.id.match(/^content-[^home].*/ig);
+	}).prepend(navcontent);
+	
+	/*$('button').button();
 	$('input[type=button]').button();
 	$('.button-add').button({icons:{primary:'ui-icon-circle-plus'}});
 	$('.button-delete').button({icons:{primary:'ui-icon-circle-close'}});
 	$('.button-edit').button({icons:{primary:'ui-icon-pencil'}});
 	$('.button-save').button({icons:{primary:'ui-icon-check'}}).hide();
-	$('.button-cancel').button({icons:{primary:'ui-icon-close'}}).hide();
+	$('.button-cancel').button({icons:{primary:'ui-icon-close'}}).hide();*/
 }
 
 function setupEvents() {
 	
-	$('#nav ul li a').click(function(event) {
-		var id = event.target.id.split('-');
-		switchTo(id[1]);
+	$('a[data-switch], button[data-switch]').click(function(event) {
+		//var id = $(this).attr('data-switch').split('-');
+		//switchTo(id[1]);
+		switchTo($(this).attr('data-switch'));
 	});
 	
 	// Expand contents when a note is clicked
@@ -106,18 +118,18 @@ function switchTo(id) {
 	navid = "#nav-"+id;
 	contentid = "#content-"+id;
 	
-	fromnavid = $('.active a').attr('id'); // Get current active element's id
+	fromnavid = $('.nav-active a').attr('id'); // Get current active element's id
 	fromcontid = "#content-"+fromnavid.split('-')[1];
 	
 	removeActiveClass(); // Remove active class from all elements
 	
-	$(navid).parent().addClass('active'); // Add active class to the current element
+	$(navid).parent().addClass('nav-active'); // Add active class to the current element
 	
-	$(fromcontid).hide('slideUp', function() { $(contentid).slideDown({duration:'slow', easing:'easeOutExpo'}); });
+	$(fromcontid).hide('slideUp', function() { $(contentid).slideDown({duration:'slow'}); });
 		
 	$(contentid).focus();
 }
 
 function removeActiveClass() {
-	$('.active').removeClass('active');
+	$('.nav-active').removeClass('nav-active');
 }
