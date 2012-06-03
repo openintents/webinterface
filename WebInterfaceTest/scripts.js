@@ -143,15 +143,16 @@ function refreshNotes()
 			alert("Error fetching data. The server says\n"+data['msg']);
 		}
 		else {
+			$('#content-notepad .table-list').remove();
+			$('#content-notepad').append('<table class="table-list">'+
+									'<thead><th>Title</th></thead>'+
+									'<tbody></tbody></table>');
 			$.each(data.notes, function(i, note) {
 				//console.log(note.TITLE);
 				insertNote(note._ID, note.TITLE, note.NOTE, note.CREATED_DATE, note.MODIFIED_DATE);
 			});
 		}
 	});
-	
-	addNoteButtons();
-	//setupEvents();
 }
 
 function insertNote(id, title, text, createdDate, modifiedDate)
