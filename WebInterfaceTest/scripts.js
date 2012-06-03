@@ -35,10 +35,6 @@ function setupUI() {
 	/*$('.active').show();
 	$('#nav-home').parent().addClass('active'); // Set home as the default active link*/
 	
-	$('.table-hide').append('<hr/><button class="button-note-edit button-edit btn">Edit</button>'+
-							'<button class="button-note-save button-save btn">Save</button>'+
-							'<button class="button-note-cancel button-cancel btn">Cancel</button>');
-	
 	var navcontent = '<div class="nav-content"><button class="btn" data-switch="home">&larr; Back</button></div>';
 	
 	$('div').filter(function() {
@@ -63,7 +59,7 @@ function setupEvents() {
 	});
 	
 	// Expand contents when a note is clicked
-	$('.table-list tr td a').on('click.#', function(e) {
+	$('.table-list tr td a').live('click.#', function(e) {
 		e.preventDefault();
 		var current = $(this).parent().children('.table-hide');
 		if(current.attr('class').indexOf('table-hide-shown') != -1) // Element is current displayed
@@ -84,7 +80,7 @@ function setupEvents() {
 	});
 	
 	// Show textarea when user clicks the edit button on a note
-	$('.button-edit').click(function() {
+	$('.button-edit').live('click', function() {
 		var parent = $(this).parent();
 		var id = parent.attr('id');
 		id = id.split('-')[2];
@@ -126,10 +122,45 @@ function switchTo(id) {
 	$(navid).parent().addClass('nav-active'); // Add active class to the current element
 	
 	$(fromcontid).hide('slideUp', function() { $(contentid).slideDown({duration:'slow'}); });
-		
+	
 	$(contentid).focus();
+	
+	if(id == 'notepad') { refreshNotes(); }
 }
 
 function removeActiveClass() {
 	$('.nav-active').removeClass('nav-active');
+}
+
+
+function refreshNotes()
+{
+	URL = "http://localhost/server/index.php";
+	
+	// Get all notes
+	$.getJSON(URL+'/notes/get', function(data) {
+		if(data.code != 200) {
+			alert("Error fetching data. The server says\n"+data['msg']);
+		}
+		else {
+			$.each(data.notes, function(i, note) {
+				//console.log(note.TITLE);
+				insertNote(note._ID, note.TITLE, note.NOTE, note.CREATED_DATE, note.MODIFIED_DATE);
+			});
+		}
+	});
+	
+	addNoteButtons();
+	//setupEvents();
+}
+
+function insertNote(id, title, text, createdDate, modifiedDate)
+{
+	note = $('#content-notepad .table-list tbody');
+	note.append('<tr><td><a href="#" id="note-'+id+'">'+title+
+											'</a><div id="note-content-'+id+'" class="table-hide"><p>'+text+'</p><hr/><button class="button-note-edit'+
+											' button-edit btn">Edit</button>'+
+											'<button class="button-note-save button-save btn hide">Save</button>'+
+											'<button class="button-note-cancel button-cancel btn hide">Cancel</button>');
+	note.append('</div></tr></td>');
 }

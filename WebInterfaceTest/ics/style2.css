@@ -44,6 +44,10 @@
 	clear: both;
 }
 
+.hide {
+	display: none;
+}
+
 .table-list {
 	width: 100%;
 	text-align: left;
