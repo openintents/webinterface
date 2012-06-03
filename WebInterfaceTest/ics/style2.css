@@ -48,6 +48,10 @@
 	display: none;
 }
 
+.input-xlarge {
+	resize: both;
+}
+
 .table-list {
 	width: 100%;
 	text-align: left;
@@ -68,4 +72,16 @@
 	padding: 10px;
 	display: none;
 	width: inherit !important;
+}
+
+.note-select {
+	width: 1%;
+	padding: 5px;
+}
+
+.throbber-small {
+	background-image: url('../images/throbber-small.gif');
+	background-repeat: no-repeat;
+	background-position:left center;
+	padding-left: 35px;
 }

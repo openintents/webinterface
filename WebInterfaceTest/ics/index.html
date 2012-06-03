@@ -3,7 +3,7 @@
 	<head>
 		<title>OpenIntents Web Client</title>
 		<meta content="width=device-width, initial-scale=1.0" name="viewport">
-		<link rel="stylesheet" media="all" href="../css/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" media="all" href="../css/bootstrap/css/bootstrap.min.css"/>
 		<!--<link rel="stylesheet" href="../style.css" media="screen"/>-->
 		<link rel="stylesheet" href="style2.css" media="screen"/>
 		<link rel="stylesheet" href="theme2.css" media="screen"/>
@@ -67,8 +67,45 @@
 				</div> <!-- #home -->
 				<div id="content-notepad">
 					<h3>OI Notepad notes</h3>
-					<button class="button-note-add button-add btn">Add</button>
-					<button class="button-note-delete button-delete btn">Delete</button>
+					<span class="btn-group btn-toolbar">
+						<div class="modal hide" id="add-note-modal">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">×</button>
+								<h3>Add New Note</h3>
+							</div>
+							<div class="modal-body well">
+								<form id="form-note-add">
+									<label of="title" class="control-label">Title</label>
+									<input type="text" name="title" class="input-xlarge"/>
+									<label of="text" class="control-label">Text</label>
+									<textarea name="text" class="input-xlarge">
+									</textarea>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<a id="btn-note-close" href="#" class="btn" data-dismiss="modal">Close</a>
+								<a id="btn-note-add" href="#" class="btn btn-primary">Add</a>
+							</div>
+						</div>
+						<button class="button-note-add button-add btn">
+							<i class="icon-plus"></i>
+							New Note
+						</button>
+					
+					<span class="btn-group">
+						<button class="button-note-select button-select btn" data-toggle="dropdown">
+							Actions
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a id="notepad-action-toggle" href="#">Toggle Selection</a></li>
+							<li><a id="notepad-action-selectall" href="#">Select All</a></li>
+							<li><a id="notepad-action-deselectall" href="#">Deselect All</a></li>
+							<li><a id="notepad-action-deleteselected" href="#">Delete Selected</a></li>
+						</ul>
+					<!--<button class="button-note-delete button-delete btn"><i class="icon-remove"></i>Delete</button>-->
+					</span> <!-- .btn-group -->
+					    
 					<table class="table-list">
 						<thead>
 							<th>Title</th>
@@ -95,11 +132,11 @@
 		<footer id="footer" class="ui-layout-south">
 			<p>&copy; OpenIntents 2012</p>
 		</footer>
+		<div id="notification-wrapper"></div>
 		<script src="../js/jquery-1.7.2.min.js" type="text/javascript"></script>
-		<script src="../css/bootstrap/css/js/bootstrap.js" type="text/javascript"></script>
+		<script src="../js/bootstrap-alert.js" type="text/javascript"></script>
 		<script src="../js/bootstrap-dropdown.js" type="text/javascript"></script>
-		<script src="../js/jquery-ui-1.8.20.custom.min.js" type="text/javascript"></script>
-		<script src="../js/jquery.layout.min.js" type="text/javascript"></script>
+		<script src="../js/bootstrap-modal.js" type="text/javascript"></script>
 		<script src="../scripts.js" type="text/javascript"></script>
 		<script src="ics.js" type="text/javascript"></script>
 		<script type="text/javascript">
