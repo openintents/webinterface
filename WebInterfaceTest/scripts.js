@@ -205,7 +205,7 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 	$('.table-hide #note-content-'+id).parent().append(table_hide_edit);
 }
 
-function notify(text, type, container, persist)
+function notify(text, type, persist, container)
 {
 	container = (typeof container === "undefined")?'#notification-wrapper':container;
 	persist = (typeof persist === "undefined")?false:persist;
@@ -220,13 +220,25 @@ function notify(text, type, container, persist)
 	$(container).prepend(content);
 	$('#'+id).fadeIn();
 	
-	// Hide notification after 5 seconds
-	setTimeout("$('#"+id+"').fadeOut('slow', function() { $(this).remove() })", 5 * 1000); 
+	// Hide notification after 5 seconds if persist is false
+	if(!persist)
+		setTimeout("$('#"+id+"').fadeOut('slow', function() { $(this).remove() })", 5 * 1000);
+	
+	return id;
 }
 
 /* AJAX Methods */
 
-URL = "http://localhost/server/index.php";
+URL = "http://kbhaskar.in/server-pdo/index.php";
+
+$.ajaxSetup({
+	cache: false
+});
+
+$(document).ajaxError(function(e, jqxhr, settings, exception) {
+	console.log(e);
+	console.log(exception);
+});
 
 function refreshNotes()
 {
@@ -241,12 +253,41 @@ function refreshNotes()
 			$('#content-notepad').append('<table class="table-list">'+
 									'<thead><th>Title</th></thead>'+
 									'<tbody></tbody></table>');
-			$.each(data.notes, function(i, note) {
-				//console.log(note.TITLE);
+			
+			
+			console.log(data['notes']);
+			
+			keys = sortNotes(data.notes);
+			
+			for(var i=0; i < keys.length; i++)
+			{
+					insertNote(data.notes[keys[i]]._ID, data.notes[keys[i]].TITLE,
+					data.notes[keys[i]].NOTE, data.notes[keys[i]].CREATED_DATE,
+					data.notes[keys[i]].MODIFIED_DATE);			
+			}
+			
+			/*$.each(data.notes, function(i, note) {
+				console.log(i);
 				insertNote(note._ID, note.TITLE, note.NOTE, note.CREATED_DATE, note.MODIFIED_DATE);
-			});
+			})*/;
 		}
 	});
+}
+
+function sortNotes(notes)
+{
+	var keys = [];
+	for (var x in notes)
+		notes.hasOwnProperty(x) && keys.push(x);
+	
+	keys = $.map(keys, Number);
+	
+	keys.sort(function(a, b) { return a - b; });
+	
+	keys.sort(function(a, b) {
+		return notes[b].MODIFIED_DATE - notes[a].MODIFIED_DATE;
+	});
+	return keys;
 }
 
 function addNewNote(form)
