@@ -15,10 +15,10 @@ $(document).ready(function() {
 	
 	$('#nav').hide(); // Hide the sidebar
 	
-	$('#content').css('margin-left','25%');
-	//resizeUI();
+	//$('#content').css('margin-left','25%');
+	resizeUI();
 	
-	$('#menuToggleSidebar').click(function() {
+	$('#menuToggleSidebar, #menuToggleSidebarMobile').click(function() {
 		toggleSidebar();
 	});
 	
@@ -205,7 +205,7 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 					  '<input name="title" type="text" value="'+title+'"/>'+
 					  '<textarea name="text">'+text+'</textarea>'+
 					  '<input type="hidden" name="id" value="'+id+'"/></form>'+
-					  '<button class="button-note-save button-save btn">Save</button>'+
+					  '<button class="button-note-save button-save btn btn-primary">Save</button>'+
 					  '<button class="button-note-cancel button-cancel btn">Cancel</button>'+
 					  '</span>';
 					  
@@ -238,7 +238,7 @@ function notify(text, type, persist, container)
 
 /* AJAX Methods */
 
-URL = "http://kbhaskar.in/server-pdo/index.php";
+URL = "http://localhost/server-pdo/index.php";
 
 $.ajaxSetup({
 	cache: false
@@ -367,13 +367,13 @@ function toggleSidebar()
 	if(classes.indexOf('shown') < 0)
 	{
 		$('#nav').addClass('shown');
-		//resizeUI();
+		resizeUI();
 		$('#nav').show('slow');
 	}
 	else
 	{
 		$('#nav').removeClass('shown');
-		$('#nav').hide('slow', function() { /*resizeUI();*/ });
+		$('#nav').hide('slow', function() { resizeUI(); });
 	}
 }
 
