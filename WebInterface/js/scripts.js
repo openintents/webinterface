@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	
-	//initialize();
+	initialize();
 	
 	$('.nav-active').show();
 	$('#nav-home').parent().addClass('nav-active'); // Set home as the default active link
@@ -13,7 +13,12 @@ $(document).ready(function() {
 	setupUI();
 	setupEvents();
 	
-	$('#nav').hide(); // Hide the sidebar
+	$('#nav').addClass('shown');
+	
+	if(Settings.get()['show-sidebar'] == 0) { // Hide the sidebar
+		$('#nav').addClass('hide');
+		sidebar('hide');
+	}
 	
 	//$('#content').css('margin-left','25%');
 	resizeUI();
@@ -24,16 +29,37 @@ $(document).ready(function() {
 	
 	//Hide the loading screen
 	$('.lightbox_bg').hide();
-	$('.modal_load').hide();	
+	$('.modal_load').hide();
 });
+
+var Settings = new function() {
+	
+	var self = this;
+	
+	this.get = function () {
+		
+		settings = {};
+		data = $.cookie('OIWebClientSettings');
+		
+		if(data) {
+			settings = $.secureEvalJSON(data);
+		}
+		
+		return settings;
+	}
+	
+	this.set = function (key, value) {
+		settings = self.get();
+		settings[key] = value;
+		$.cookie('OIWebClientSettings', $.toJSON(settings));
+	}
+}
 
 // Initializes the interface and fetches any data from the server
 // Does not do anything useful for now, just displays a simple progressbar dialog
 
 function initialize() {
-	$('<div />').addClass('lightbox_bg').appendTo('body').show();
-	$('<div />').html('<p>Please wait....</p><img src=\'images/ajax-loader.gif\'/>')
-	.addClass('modal').appendTo('body');	
+	set = Settings.get();
 }
 
 function setupUI() {
@@ -376,16 +402,28 @@ function hideMenu()
 function toggleSidebar()
 {
 	var classes = $('#nav').attr('class');
-	if(classes.indexOf('shown') < 0)
+	if(classes.indexOf('shown') < 0) // Sidebar is hidden
 	{
+		sidebar('show');
+		Settings.set('show-sidebar', 1);
+	}
+	else // Sidebar is visible
+	{
+		sidebar('hide');
+		Settings.set('show-sidebar', 0);
+	}
+}
+
+function sidebar(action)
+{
+	if(action == 'hide') {
+		$('#nav').removeClass('shown');
+		$('#nav').hide('slow', function() { resizeUI(); });
+	}
+	else {
 		$('#nav').addClass('shown');
 		resizeUI();
 		$('#nav').show('slow');
-	}
-	else
-	{
-		$('#nav').removeClass('shown');
-		$('#nav').hide('slow', function() { resizeUI(); });
 	}
 }
 
