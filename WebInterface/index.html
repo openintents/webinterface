@@ -10,13 +10,13 @@
 	</head>
 	
 	<body>
-		<!--<div class="lightbox_bg" style="display:block"></div>
+		<div class="lightbox_bg" style="display:block"></div>
 		<div class="modal_load">
 			<p>Please wait....</p>
 			<div class="progress progress-striped active">
 				<div class="bar" style="width:100%"></div>
 			</div>
-		</div>-->
+		</div>
 		<header id="header" class="navbar top">
 				<div class="navbar-inner">
 					<div class="container-fluid">
@@ -82,7 +82,7 @@
 				<div id="content-notepad">
 					<h3>OI Notepad notes</h3>
 					<span class="btn-group btn-toolbar">
-						<div class="modal hide" id="add-note-modal">
+						<div class="visible-desktop hide" id="add-note-modal">
 							<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
 								<h3>Add New Note</h3>
@@ -100,7 +100,8 @@
 								<a id="btn-note-add" href="#" class="btn btn-primary">Add</a>
 							</div>
 						</div>
-						<button class="button-note-add button-add btn">
+						
+						<button id="btn-new-note" class="button-note-add button-add btn">
 							<i class="icon-plus"></i>
 							New Note
 						</button>
@@ -118,7 +119,18 @@
 						</ul>
 					<!--<button class="button-note-delete button-delete btn"><i class="icon-remove"></i>Delete</button>-->
 					</span> <!-- .btn-group -->
-					    
+					<div id="add-note-phone" class="hide">
+						<div class="well">
+							<form id="form-note-add">
+								<label of="title" class="control-label">Title</label>
+								<input type="text" name="title" class="input-xlarge"/>
+								<label of="text" class="control-label">Text</label>
+								<textarea name="text" class="input-xlarge"></textarea>
+							</form>
+							<a id="btn-note-close-phone" href="#" class="btn push-left">Close</a>
+							<a id="btn-note-add" href="#" class="btn btn-primary push-left">Add</a>
+						</div>
+					</div>
 					<table class="table-list">
 						<thead>
 							<th>Title</th>

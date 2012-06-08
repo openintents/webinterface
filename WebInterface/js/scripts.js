@@ -135,7 +135,14 @@ function setupEvents() {
 	});
 	
 	$('.button-note-add').live('click', function() {
-		$('#add-note-modal').modal();
+		
+		if(screen.width >= 979) { // Desktop
+			$('#add-note-modal').addClass('modal');
+			$('#add-note-modal').modal();
+		}
+		else { // Mobile
+			$('#add-note-phone').show();
+		}
 	});
 	
 	// Toggle note selection
@@ -159,6 +166,11 @@ function setupEvents() {
 		notify('Saving note....', 'alert-info');
 		addNewNote('#form-note-add');
 		$('#add-note-modal').modal('hide');
+	});
+	
+	$('#btn-note-close-phone').live('click', function() {
+		$('#add-note-phone').slideUp();
+		
 	});
 }
 
