@@ -348,6 +348,19 @@ function resizeUI()
 	}
 }
 
+function showThrobber(context)
+{
+	console.log(context);
+	content = '<div id="throbber" class="well"><p>Loading....</p>'+
+	'<div class="progress progress-striped active">'+
+	'<div class="bar" style="width:100%"></div></div></div>';
+	$(context).append(content);
+}
+
+function hideThrobber()
+{
+	$('#throbber').remove();
+}
 
 /* 
  * 
@@ -367,9 +380,11 @@ $.ajaxSetup({
 
 function refreshNotes()
 {
+	showThrobber('#content-notepad');
 	
 	// Get all notes
 	$.getJSON(URL+'/notes/get', function(data) {
+		hideThrobber();
 		if(data.code != 200) {
 			notify("Error fetching data. The server says\n"+data['msg'], 'alert-error', true);
 		}

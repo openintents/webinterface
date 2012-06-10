@@ -34,12 +34,18 @@
 
 #footer {
 	overflow: hidden;
+	height: 3em;
 }
 
 #footer p {
 	margin: 5px;
 }
 
+#throbber {
+	max-width: 15%;
+	margin: 1em auto;
+	border-radius: 4px;
+}
 
 /* Classes */
 
@@ -127,7 +133,6 @@
 	z-index:51;
 	text-align: center;
 }
-
 
 /* Landscape phones and down */
 @media (max-width: 480px) { 
