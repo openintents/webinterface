@@ -103,9 +103,8 @@ hr {
 
 #wrap-content {
 	background-color: #0d0d0d;
-	min-height: 100%;
 	position: relative;
-	padding: 1em 0;
+	padding: 1em 0 0;
 }
 
 #nav {
@@ -217,10 +216,8 @@ hr {
 }
 
 #footer, #push {
-	height: 1em;
 	background-color: #000000;
 	border-color: #111;
-	position: static;
 	margin: 0;
 }
 
@@ -334,56 +331,4 @@ background-color: hsl(0, 0%, 16%) !important; background-repeat: repeat-x; filte
 	position: fixed;
 	top: 0;
 	left: 50%;
-}
-
-/* Landscape phones and down */
-@media (max-width: 480px) { 
-	body {
-		padding-left: 0;
-		padding-right: 0;
-	}
-	
-	#content {
-		margin: 0 1em !important;
-	}
-	
-	.table-list {
-		margin: 0;
-	}
-}
-
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px) { 
-	
-	body {
-		padding-left: 0;
-		padding-right: 0;
-	}
-	
-	#nav ul li a, #nav ul li a:visited {
-		color: #fff;
-		padding: 1em;
-		font-weight: bold;
-	}
-	
-	#content {
-		margin: 0 1em;
-	}
-	
-	.table-list {
-		margin: 0;
-	}
-}
- 
-/* Portrait tablet to landscape and desktop */
-@media (min-width: 768px) and (max-width: 979px) { 
-	#nav ul li a, #nav ul li a:visited {
-		color: #fff;
-		padding: 1em;
-		font-weight: bold;
-	}
-	
-	#content {
-		margin-left: 25%;
-	}
 }

@@ -32,6 +32,8 @@ $(document).ready(function() {
 	$('.modal_load').hide();
 });
 
+// Provides settings retrieving and saving via cookies
+
 var Settings = new function() {
 	
 	var self = this;
@@ -274,113 +276,6 @@ function notify(text, type, persist, container)
 	return id;
 }
 
-/* AJAX Methods */
-
-URL = "http://localhost/server-pdo/index.php";
-
-$.ajaxSetup({
-	cache: false
-});
-
-function refreshNotes()
-{
-	
-	// Get all notes
-	$.getJSON(URL+'/notes/get', function(data) {
-		if(data.code != 200) {
-			notify("Error fetching data. The server says\n"+data['msg'], 'alert-error', true);
-		}
-		else {
-			$('#content-notepad .table-list').remove();
-			$('#content-notepad').append('<table class="table-list">'+
-									'<thead><th>Title</th></thead>'+
-									'<tbody></tbody></table>');
-			
-			
-			console.log(data['notes']);
-			
-			keys = sortNotes(data.notes);
-			
-			for(var i=0; i < keys.length; i++)
-			{
-					insertNote(data.notes[keys[i]]._ID, data.notes[keys[i]].TITLE,
-					data.notes[keys[i]].NOTE, data.notes[keys[i]].CREATED_DATE,
-					data.notes[keys[i]].MODIFIED_DATE);			
-			}
-			
-			/*$.each(data.notes, function(i, note) {
-				console.log(i);
-				insertNote(note._ID, note.TITLE, note.NOTE, note.CREATED_DATE, note.MODIFIED_DATE);
-			})*/;
-		}
-	});
-}
-
-function sortNotes(notes)
-{
-	var keys = [];
-	for (var x in notes)
-		notes.hasOwnProperty(x) && keys.push(x);
-	
-	keys = $.map(keys, Number);
-	
-	keys.sort(function(a, b) { return a - b; });
-	
-	keys.sort(function(a, b) {
-		return notes[b].MODIFIED_DATE - notes[a].MODIFIED_DATE;
-	});
-	return keys;
-}
-
-function addNewNote(form)
-{
-	$.post(URL+'/notes/new', $(form).serialize(), function(data) {
-		if(data.code != 200) {
-			//alert("Error adding new note. The server says\n"+data['msg']); 
-			notify('An error occurred while adding a new note<br/>The server says: '+data['msg']);
-		}
-		else {
-			refreshNotes();
-			if($('#add-note-modal').is(':hidden')) {
-				notify('Note saved successfully!', 'alert-success');
-			}
-			else {
-				notify('Note saved successfully!', 'alert-success', '#add-note-modal .modal-body');
-			}
-		}
-	}, 'json');
-}
-
-function updateNote(id)
-{
-	postData = $('#note-edit-'+id+' form').serialize();
-	
-	$.post(URL+'/notes/update', postData, function(data) {
-		//console.log(data.code);
-		if(data.code != 200) {
-			notify('Error updating note: '+data['msg'], 'alert-error');
-		}
-		else {
-			refreshNotes();
-			notify('Note updated successfully!', 'alert-success');
-		}
-	}, 'json');
-}
-
-function deleteNote(id)
-{
-	$.getJSON(URL+'/notes/delete/'+id, function(data) {
-		if(data.code != 200)
-		{
-			notify('Error deleting note: '+data['msg'], 'alert-error');
-		}
-		else
-		{
-			refreshNotes();
-			notify('Note deleted successfully!', 'alert-success');
-		}
-	});	
-}
 
 function hideMenu()
 {
@@ -451,4 +346,117 @@ function resizeUI()
 		$('#content').addClass(span);
 		$('#content').animate({'margin':margin});
 	}
+}
+
+
+/* 
+ * 
+ * AJAX Methods
+ * 
+ * 
+*/
+
+// TODO: Is this a good way to get the server's IP?
+SERVER = window.location.host;
+URL = "http://"+SERVER+"/server-pdo/index.php";
+
+// Disable AJAX caching, it leads to problems on webkit browsers
+$.ajaxSetup({
+	cache: false
+});
+
+function refreshNotes()
+{
+	
+	// Get all notes
+	$.getJSON(URL+'/notes/get', function(data) {
+		if(data.code != 200) {
+			notify("Error fetching data. The server says\n"+data['msg'], 'alert-error', true);
+		}
+		else {
+			
+			$('#content-notepad .table-list').remove();
+			$('#content-notepad').append('<table class="table-list">'+
+									'<thead><th>Title</th></thead>'+
+									'<tbody></tbody></table>');
+			
+			
+			console.log(data['notes']);
+			
+			keys = sortNotes(data.notes);
+			
+			for(var i=0; i < keys.length; i++)
+			{
+					insertNote(data.notes[keys[i]]._ID, data.notes[keys[i]].TITLE,
+					data.notes[keys[i]].NOTE, data.notes[keys[i]].CREATED_DATE,
+					data.notes[keys[i]].MODIFIED_DATE);			
+			}
+		}
+	});
+}
+
+function sortNotes(notes)
+{
+	var keys = [];
+	for (var x in notes)
+		notes.hasOwnProperty(x) && keys.push(x);
+	
+	keys = $.map(keys, Number);
+	
+	keys.sort(function(a, b) { return a - b; });
+	
+	keys.sort(function(a, b) {
+		return notes[b].MODIFIED_DATE - notes[a].MODIFIED_DATE;
+	});
+	return keys;
+}
+
+function addNewNote(form)
+{
+	$.post(URL+'/notes/new', $(form).serialize(), function(data) {
+		if(data.code != 200) {
+			//alert("Error adding new note. The server says\n"+data['msg']); 
+			notify('An error occurred while adding a new note<br/>The server says: '+data['msg']);
+		}
+		else {
+			refreshNotes();
+			if($('#add-note-modal').is(':hidden')) {
+				notify('Note saved successfully!', 'alert-success');
+			}
+			else {
+				notify('Note saved successfully!', 'alert-success', '#add-note-modal .modal-body');
+			}
+		}
+	}, 'json');
+}
+
+function updateNote(id)
+{
+	postData = $('#note-edit-'+id+' form').serialize();
+	
+	$.post(URL+'/notes/update', postData, function(data) {
+		//console.log(data.code);
+		if(data.code != 200) {
+			notify('Error updating note: '+data['msg'], 'alert-error');
+		}
+		else {
+			refreshNotes();
+			notify('Note updated successfully!', 'alert-success');
+		}
+	}, 'json');
+}
+
+function deleteNote(id)
+{
+	$.getJSON(URL+'/notes/delete/'+id, function(data) {
+		if(data.code != 200)
+		{
+			notify('Error deleting note: '+data['msg'], 'alert-error');
+		}
+		else
+		{
+			refreshNotes();
+			notify('Note deleted successfully!', 'alert-success');
+		}
+	});	
 }

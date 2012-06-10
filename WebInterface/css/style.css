@@ -20,6 +20,7 @@
 
 #wrap-content {
 	padding: 0;
+	min-height: 85%;
 }
 
 #main-content {
@@ -29,6 +30,16 @@
 #nav ul {
 	list-style: none;
 }
+
+
+#footer {
+	overflow: hidden;
+}
+
+#footer p {
+	margin: 5px;
+}
+
 
 /* Classes */
 
@@ -115,4 +126,70 @@
 	top:45%;
 	z-index:51;
 	text-align: center;
+}
+
+
+/* Landscape phones and down */
+@media (max-width: 480px) { 
+	body {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#wrap-content {
+		min-height: 81%;
+	}
+	
+	#content {
+		margin: 0 1em !important;
+	}
+	
+	.table-list {
+		margin: 0;
+	}
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
+	
+	body {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	
+	#wrap-content {
+		min-height: 81%;
+	}
+	
+	#nav ul li a, #nav ul li a:visited {
+		color: #fff;
+		padding: 1em;
+		font-weight: bold;
+	}
+	
+	#content {
+		margin: 0 1em;
+	}
+	
+	.table-list {
+		margin: 0;
+	}
+}
+ 
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { 
+	
+	#wrap-content {
+		min-height: 81%;
+	}
+	
+	#nav ul li a, #nav ul li a:visited {
+		color: #fff;
+		padding: 1em;
+		font-weight: bold;
+	}
+	
+	#content {
+		margin-left: 25%;
+	}
 }
