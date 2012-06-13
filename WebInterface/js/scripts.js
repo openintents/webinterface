@@ -243,8 +243,8 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 	
 	table_hide_edit = '<span id="note-edit-'+id+'" class="hide"><form>'+
 					  '<input name="title" type="text" value="'+title+'"/>'+
-					  '<textarea name="text">'+text+'</textarea>'+
-					  '<input type="hidden" name="id" value="'+id+'"/></form>'+
+					  '<textarea name="note">'+text+'</textarea>'+
+					  '<input type="hidden" name="_id" value="'+id+'"/></form>'+
 					  '<button class="button-note-save button-save btn btn-primary">Save</button>'+
 					  '<button class="button-note-cancel button-cancel btn">Cancel</button>'+
 					  '</span>';
@@ -371,11 +371,16 @@ function hideThrobber()
 
 // TODO: Is this a good way to get the server's IP?
 SERVER = window.location.host;
-URL = "http://"+SERVER+"/server-pdo/index.php";
+//URL = "http://"+SERVER+"/server-pdo/index.php";
+URL = SERVER;
 
 // Disable AJAX caching, it leads to problems on webkit browsers
 $.ajaxSetup({
-	cache: false
+	cache: false,
+	error: function error(jqXHR, textStatus, errorThrown) 	{
+		hideThrobber();
+		notify('Error performing operation: '+textStatus, 'alert-error'); 
+	}
 });
 
 function refreshNotes()
@@ -383,12 +388,9 @@ function refreshNotes()
 	showThrobber('#content-notepad');
 	
 	// Get all notes
-	$.getJSON(URL+'/notes/get', function(data) {
+	$.getJSON('/notes/get', function(data) {
 		hideThrobber();
-		if(data.code != 200) {
-			notify("Error fetching data. The server says\n"+data['msg'], 'alert-error', true);
-		}
-		else {
+		
 			
 			$('#content-notepad .table-list').remove();
 			$('#content-notepad').append('<table class="table-list">'+
@@ -396,17 +398,18 @@ function refreshNotes()
 									'<tbody></tbody></table>');
 			
 			
-			console.log(data['notes']);
+			console.log(data);
 			
-			keys = sortNotes(data.notes);
+			keys = sortNotes(data);
+			
+			console.log(keys);
 			
 			for(var i=0; i < keys.length; i++)
 			{
-					insertNote(data.notes[keys[i]]._ID, data.notes[keys[i]].TITLE,
-					data.notes[keys[i]].NOTE, data.notes[keys[i]].CREATED_DATE,
-					data.notes[keys[i]].MODIFIED_DATE);			
+					insertNote(data[keys[i]]._id, data[keys[i]].title,
+					data[keys[i]].note, data[keys[i]].created,
+					data[keys[i]].modified);			
 			}
-		}
 	});
 }
 
@@ -421,19 +424,21 @@ function sortNotes(notes)
 	keys.sort(function(a, b) { return a - b; });
 	
 	keys.sort(function(a, b) {
-		return notes[b].MODIFIED_DATE - notes[a].MODIFIED_DATE;
+		console.log(notes[b].modified);
+		return notes[b].modified - notes[a].modified;
 	});
+	
 	return keys;
 }
 
 function addNewNote(form)
 {
-	$.post(URL+'/notes/new', $(form).serialize(), function(data) {
-		if(data.code != 200) {
+	$.post('/notes/new', $(form).serialize(), function(data) {
+		/*if(data.code != 200) {
 			//alert("Error adding new note. The server says\n"+data['msg']); 
-			notify('An error occurred while adding a new note<br/>The server says: '+data['msg']);
+			notify('An error occurred while adding a new note<br/>The server says: '+data['msg'], 'alert-error');
 		}
-		else {
+		else {*/
 			refreshNotes();
 			if($('#add-note-modal').is(':hidden')) {
 				notify('Note saved successfully!', 'alert-success');
@@ -441,7 +446,7 @@ function addNewNote(form)
 			else {
 				notify('Note saved successfully!', 'alert-success', '#add-note-modal .modal-body');
 			}
-		}
+		//}
 	}, 'json');
 }
 
@@ -449,29 +454,29 @@ function updateNote(id)
 {
 	postData = $('#note-edit-'+id+' form').serialize();
 	
-	$.post(URL+'/notes/update', postData, function(data) {
+	$.post('/notes/update', postData, function(data) {
 		//console.log(data.code);
-		if(data.code != 200) {
+		/*if(data.code != 200) {
 			notify('Error updating note: '+data['msg'], 'alert-error');
 		}
-		else {
+		else {*/
 			refreshNotes();
 			notify('Note updated successfully!', 'alert-success');
-		}
+		//}
 	}, 'json');
 }
 
 function deleteNote(id)
 {
-	$.getJSON(URL+'/notes/delete/'+id, function(data) {
-		if(data.code != 200)
+	$.getJSON('/notes/delete?id='+id, function(data) {
+		/*if(data.code != 200)
 		{
 			notify('Error deleting note: '+data['msg'], 'alert-error');
-		}
-		else
-		{
+		}*/
+		/*else
+		{*/
 			refreshNotes();
 			notify('Note deleted successfully!', 'alert-success');
-		}
+		//}
 	});	
 }
