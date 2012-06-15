@@ -15,13 +15,7 @@ $(document).ready(function() {
 	
 	$('#nav').addClass('shown');
 	
-	if(Settings.get()['show-sidebar'] == 0) { // Hide the sidebar
-		$('#nav').addClass('hide');
-		sidebar('hide');
-	}
-	
-	//$('#content').css('margin-left','25%');
-	resizeUI();
+	refreshUI();
 	
 	$('#menuToggleSidebar, #menuToggleSidebarMobile').click(function() {
 		toggleSidebar();
@@ -59,9 +53,23 @@ var Settings = new function() {
 
 // Initializes the interface and fetches any data from the server
 // Does not do anything useful for now, just displays a simple progressbar dialog
+// Also initializes settings
 
 function initialize() {
 	set = Settings.get();
+	
+	if(typeof set['showSidebar'] === 'undefined') {
+		Settings.set('showSidebar', true);
+	}
+	
+	if(typeof set['showApps'] === 'undefined') {
+		apps = {'notepad' : true, 'shoppinglist' : true};
+		Settings.set('showApps', apps);
+	}
+	
+	if(typeof set['theme'] === 'undefined') {
+		Settings.set('theme', 'default');
+	}
 }
 
 function setupUI() {
@@ -74,6 +82,7 @@ function setupUI() {
 	$('div').filter(function() {
 		return this.id.match(/^content-[^home].*/ig);
 	}).prepend(navcontent);
+	
 }
 
 function setupEvents() {
@@ -82,6 +91,30 @@ function setupEvents() {
 		//var id = $(this).attr('data-switch').split('-');
 		//switchTo(id[1]);
 		switchTo($(this).attr('data-switch'));
+	});
+	
+	// Show settings dialog when settings menu item is clicked
+	$('#showSettings').click(function() {
+		$('#settings').addClass('modal');
+		$('#settings').modal();
+	});
+	
+	// Show mobile-friendly version of the settings dialog
+	$('#showSettingsMobile').click(function() {
+		$('#settings').removeClass('modal');
+		$('#settings').slideDown();
+		$('#settingsClose').click(function() { $('#settings').slideUp(); $(this).off(); });
+	});
+	
+	$('#settingsSave').click(function() {
+		array = {'notepad' : $('#settingShowNotepad').is(':checked'), 
+				'shoppinglist' : $('#settingShowShoppingList').is(':checked')};
+		Settings.set('showApps', array);
+		theme = $('#settingThemeSelect option').filter(':selected').text().toLowerCase();
+		Settings.set('theme', theme);
+		Settings.set('showSidebar', $('#settingShowSidebar').is(':checked'));
+		$('#settings').modal('hide');
+		refreshUI();
 	});
 	
 	// Expand contents when a note is clicked
@@ -202,6 +235,63 @@ function setupEvents() {
 	});
 }
 
+function refreshUI() {
+	set = Settings.get();
+	
+	if(set['showSidebar'] == 0) { // Hide the sidebar
+		$('#nav').addClass('hide');
+		sidebar('hide');
+	}
+	else {
+		sidebar('show');
+	}
+	
+	$('#settingShowSidebar').attr('checked', set['showSidebar']);
+	
+	// Add the stylesheet
+	$('link[data-theme=theme]').attr('href', 'themes/'+set['theme']+'/theme.css');
+	$('link[data-theme=bootstrap]').attr('href', 'themes/'+set['theme']+'/bootstrap.min.css');
+	
+	/*theme = '<link rel="stylesheet" href="themes/'+set['theme']+'/theme.css" media="screen"/>';
+	$('head').append(theme);*/
+	console.log(set['showApps']['notepad']);
+	
+	$('#settingShowNotepad').attr('checked', set['showApps']['notepad']);
+	$('#settingShowShoppingList').attr('checked', set['showApps']['shoppinglist']);
+	
+	if(set['showApps']['notepad'] == true) {
+		$('#content-notepad[class=content-active]').show();
+		$('#nav-notepad').parent().show();
+		$('a[data-switch=notepad]').parent().show();
+	}
+	else {
+		$('#content-notepad').hide();
+		$('a[data-switch=notepad]').parent().hide();
+		$('#nav-notepad').parent().hide();
+		if($('#content-notepad').hasClass('content-active')) {
+			switchTo('home');
+		}
+	}
+	
+	if(set['showApps']['shoppinglist'] == true) {
+		$('#content-shoppinglist[class=content-active]').show();
+		$('a[data-switch=shoppinglist]').parent().show();
+		$('#nav-shoppinglist').parent().show();
+		
+	}
+	else {
+		$('#content-shoppinglist').hide();
+		$('a[data-switch=shoppinglist]').parent().hide();
+		$('#nav-shoppinglist').parent().hide();
+		if($('#content-shoppinglist').hasClass('content-active')) {
+			switchTo('home');
+		}
+	}
+	
+	//$('#content').css('margin-left','25%');
+	resizeUI();
+}
+
 function switchTo(id) {
 	
 	navid = "#nav-"+id;
@@ -300,13 +390,15 @@ function toggleSidebar()
 	if(classes.indexOf('shown') < 0) // Sidebar is hidden
 	{
 		sidebar('show');
-		Settings.set('show-sidebar', 1);
+		Settings.set('showSidebar', true);
 	}
 	else // Sidebar is visible
 	{
 		sidebar('hide');
-		Settings.set('show-sidebar', 0);
+		Settings.set('showSidebar', false);
 	}
+	
+	refreshUI();
 }
 
 function sidebar(action)
