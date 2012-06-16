@@ -224,6 +224,13 @@ function setupEvents() {
 	});
 	
 	$('#btn-note-add').live('click', function() {
+		$.validator.setDefaults({
+			showError: function(errorMap, errorList) { },
+		});
+		
+		if(!$('#form-note-add').valid()) {
+			return;
+		}
 		notify('Saving note....', 'alert-info');
 		addNewNote('#form-note-add');
 		$('#add-note-modal').modal('hide');
