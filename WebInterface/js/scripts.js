@@ -143,14 +143,11 @@ function setupEvents() {
 		e.preventDefault();
 		var parent = $(this).parent();
 		var id = parent.attr('id');
-		console.log(id);
 		id = id.split('-')[2];
 		
 		$('#note-content-'+id).hide();
 		$('#note-edit-'+id).show('slideDown');
 		
-		console.log('#note-edit-'+id);
-			
 		$('#note-edit-'+id+' .button-save').click(function() {
 			notify('Saving note....', 'alert-info');
 			updateNote(id);
@@ -166,7 +163,6 @@ function setupEvents() {
 	$('.button-delete').live('click', function() {
 		var parent = $(this).parent();
 		var id = parent.attr('id');
-		console.log(id);
 		id = id.split('-')[2];
 		
 		dialog = '<div id="delete-confirm-modal-'+id+'" class="modal hide">'+
@@ -257,6 +253,8 @@ function refreshUI() {
 		sidebar('show');
 	}
 	
+	$('#settingThemeSelect').val(''+set['theme']);
+
 	$('#settingShowSidebar').attr('checked', set['showSidebar']);
 	
 	// Add the stylesheet
@@ -265,7 +263,6 @@ function refreshUI() {
 	
 	/*theme = '<link rel="stylesheet" href="themes/'+set['theme']+'/theme.css" media="screen"/>';
 	$('head').append(theme);*/
-	console.log(set['showApps']['notepad']);
 	
 	$('#settingShowNotepad').attr('checked', set['showApps']['notepad']);
 	$('#settingShowShoppingList').attr('checked', set['showApps']['shoppinglist']);
@@ -365,8 +362,6 @@ function notify(text, type, persist, container)
 	'<a href="#" class="close" data-dismiss="alert">x</a>'+
 	text+'</div>';
 	
-	//console.log(container);
-	
 	$(container).prepend(content);
 	$('#'+id).fadeIn();
 	
@@ -453,7 +448,6 @@ function resizeUI()
 
 function showThrobber(context)
 {
-	console.log(context);
 	content = '<div id="throbber" class="well"><p>Loading....</p>'+
 	'<div class="progress progress-striped active">'+
 	'<div class="bar" style="width:100%"></div></div></div>';
@@ -501,11 +495,9 @@ function refreshNotes()
 									'<tbody></tbody></table>');
 			
 			
-			console.log(data);
 			
 			keys = sortNotes(data);
 			
-			console.log(keys);
 			
 			for(var i=0; i < keys.length; i++)
 			{
@@ -527,7 +519,6 @@ function sortNotes(notes)
 	keys.sort(function(a, b) { return a - b; });
 	
 	keys.sort(function(a, b) {
-		console.log(notes[b].modified);
 		return notes[b].modified - notes[a].modified;
 	});
 	
