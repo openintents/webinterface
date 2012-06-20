@@ -63,7 +63,7 @@ function initialize() {
 	}
 	
 	if(typeof set['showApps'] === 'undefined') {
-		apps = {'notepad' : true, 'shoppinglist' : true};
+		apps = {'notepad' : true, 'shoppinglist' : false};
 		Settings.set('showApps', apps);
 	}
 	
@@ -149,7 +149,7 @@ function setupEvents() {
 		$('#note-edit-'+id).show('slideDown');
 		
 		$('#note-edit-'+id+' .button-save').click(function() {
-			notify('Saving note....', 'alert-info');
+			//notify('Saving note....', 'alert-info');
 			updateNote(id);
 		});
 		
@@ -227,7 +227,7 @@ function setupEvents() {
 		if(!$('#form-note-add').valid()) {
 			return;
 		}
-		notify('Saving note....', 'alert-info');
+		//notify('Saving note....', 'alert-info');
 		addNewNote('#form-note-add');
 		$('#add-note-modal').modal('hide');
 	});

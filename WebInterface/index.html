@@ -31,9 +31,9 @@
 							<ul class="dropdown-menu">
 								<li><a id="menuToggleSidebar" href="#">Toggle Sidebar</a></li>
 								<li><a id="showSettings" href="#">Settings</a></li>
-								<li><a href="#">Help</a></li>
-								<li><a href="#">About</a></li>
-								<li><a href="#" id="menuLogout">Logout</a></li>
+								<!--<li><a href="#">Help</a></li>
+								<li><a href="#">About</a></li>-->
+								<!--<li><a href="#" id="menuLogout">Logout</a></li>-->
 							</ul>
 						</div>
 						<div id="menu-mobile" class="hidden-desktop">
@@ -44,10 +44,10 @@
 							</a>
 							<div class="nav-collapse">
 								<ul>
-									<li><a id="menuToggleSidebarMobile" class="hidden-phone" href="#">Toggle Sidebar</a></li>
+									<li class="hidden-phone"><a id="menuToggleSidebarMobile" href="#">Toggle Sidebar</a></li>
 									<li><a id="showSettingsMobile" href="#">Settings</a></li>
-									<li><a href="#">Help</a></li>
-									<li><a href="#">About</a></li>
+									<!--<li><a href="#">Help</a></li>
+									<li><a href="#">About</a></li>-->
 								</ul>
 							</div>
 						</div>
@@ -73,7 +73,7 @@
 						<h3>OI Web Client</h3>
 					</div>
 					<div class="modal-body well form-horizontal">
-						<label><input type="checkbox" id="settingShowSidebar" name="showSidebar"/>&nbsp;Show sidebar</label>
+						<label class="hidden-phone"><input type="checkbox" id="settingShowSidebar" name="showSidebar"/>&nbsp;Show sidebar</label>
 						<label>Select theme:&nbsp;
 						<select id="settingThemeSelect">
 							<option value="default">Default</option>
@@ -85,7 +85,7 @@
 						<label><input id="settingShowShoppingList" type="checkbox"/>&nbsp;OI Shopping List</input></label>
 					</div>
 					<div class="modal-footer">
-						<button id="settingsClose" class="btn" data-dismiss="modal">Cancel</button>
+						<button id="settingsClose" class="btn" data-dismiss="modal">Close</button>
 						<button id="settingsSave" class="btn btn-primary">Save</button>
 					</div>
 				</div> <!-- #settings -->

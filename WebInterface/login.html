@@ -26,14 +26,14 @@
 		<div id="main-content" class="row well">
 			<div class="span-12">
 				<h3 style="border-bottom: 1px solid #222222; padding: 0 0 10px;margin-bottom: 1em;">Login</h3>
-				<form class="form-vertical" id="loginForm">
+				<form class="form-vertical" id="loginForm" method="post" action="/login">
 					<fieldset>
 					<div class="control-group">
 						<label for="password" class="control-label">Password</label>
 						<input type="password" maxlen="30" name="password" class="input-xlarge"/>
 						
 						<div class="form-actions">
-							<input type="button" name="submit" class="btn btn-primary" value="Login"/>
+							<input type="submit" name="submit" class="btn btn-primary" value="Login"/>
 						</div>
 					</div>
 					</fieldset>
