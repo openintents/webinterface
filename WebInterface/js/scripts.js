@@ -240,6 +240,10 @@ function setupEvents() {
 		$('#add-note-phone').slideUp();
 		
 	});
+	
+	$('#menuLogout').click(function() {
+			logout();		
+	});
 }
 
 function refreshUI() {
@@ -578,4 +582,11 @@ function deleteNote(id)
 			notify('Note deleted successfully!', 'alert-success');
 		//}
 	});	
+}
+
+function logout()
+{
+	$.getJSON(URL+'/logout', function(data) {
+		window.location.reload(true);
+	});
 }
