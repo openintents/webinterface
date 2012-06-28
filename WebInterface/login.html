@@ -11,6 +11,18 @@
 		<script type="text/javascript">
 			<!--
 				SALT = "$SALT$";
+				$(document).ready(function() {
+				        $('#loginForm').submit(function(event) {
+					      password = $('input[name=password]').val();
+					      if(!password) {
+						alert('Please enter a password');
+						return false;
+				      		}
+					      else
+						$('input[name=password]').val(CryptoJS.SHA256(password).toString().SALT);
+					      return true;
+   					 });
+				});
 			-->
 		</script>
 	</head>
