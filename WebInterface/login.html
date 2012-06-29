@@ -19,8 +19,11 @@
 						alert('Please enter a password');
 						return false;
 				      		}
-					      else
-						$('input[name=password]').val(CryptoJS.SHA256(password).toString().SALT);
+					      else {
+						password = CryptoJS.SHA256(password).toString();
+						password = password.concat(SALT)
+						$('input[name=password]').val(password);
+						}
 					      return true;
    					 });
 				});
