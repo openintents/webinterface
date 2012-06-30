@@ -560,20 +560,17 @@ function updateNote(id)
 	}, 'json');
 }
 
-function deleteNote(id)
+function deleteNote(id, notify, refresh)
 {
-	$.getJSON('/notes/delete?id='+id, function(data) {
-		/*if(data.code != 200)
-		{
-			notify('Error deleting note: '+data['msg'], 'alert-error');
-		}*/
-		/*else
-		{*/
-			refreshNotes();
-			notify('Note deleted successfully!', 'alert-success');
-		//}
-	});	
+        (typeof refresh === "undefined")?true:refresh;
+        (typeof notify === "undefined")?true:notify;
+
+        $.get(URL+'/notes/delete?_id='+id, function(data) {
+		if(refresh) refreshNotes();
+                if(notify) notify('Note deleted successfully!', 'alert-success');
+        });
 }
+
 
 function logout()
 {
