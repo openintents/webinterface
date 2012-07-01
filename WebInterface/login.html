@@ -20,9 +20,9 @@
 						return false;
 				      		}
 					      else {
-						password = CryptoJS.SHA256(password).toString();
-						password = password.concat(SALT)
-						$('input[name=password]').val(password);
+							password = password.concat(SALT)
+							password = CryptoJS.SHA256(password).toString();
+							$('input[name=password]').val(password);
 						}
 					      return true;
    					 });
