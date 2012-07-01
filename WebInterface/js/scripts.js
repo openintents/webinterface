@@ -364,6 +364,10 @@ function removeActiveClass() {
 function insertNote(id, title, text, createdDate, modifiedDate)
 {
 	note = $('#content-notepad .table-list tbody');
+	
+	title = jQuery("<div/>").text(title).html();
+	text = jQuery("<div/>").text(text).html();
+	
 	note.append('<tr><td class="note-select hide">'+
 				'<input id="note-check-'+id+'" type="checkbox"/></td>'+
 				'<td><a href="#" id="note-'+id+'">'+title+'</a>'+
