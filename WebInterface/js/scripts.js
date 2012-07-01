@@ -219,6 +219,41 @@ function setupEvents() {
 		$('#content-notepad .table-list input:checkbox').attr('checked', false);
 	});
 	
+	// Delete selected notes
+	$('#notepad-action-deleteselected').live('click', function() {
+		dialog = '<div id="delete-confirm-modal-all" class="modal hide">'+
+				 '<div class="modal-body">'+
+				 '<p>Are you sure you wish to delete all selected items?</p>'+
+				 '</div>'+
+				 '<div class="modal-footer">'+
+				 '<a id="btn-close" href="#" class="btn" data-dismiss="modal">Cancel</a>'+
+				 '<a id="btn-delete" href="#" class="btn btn-primary">Delete</a>'+
+				 '</div></div>';
+				 
+		$('body').append(dialog);
+		
+		$('#delete-confirm-modal-all #btn-close').click(function(e) {
+			e.preventDefault();
+			$('#delete-confirm-modal-all').modal('hide');
+			$('#delete-confirm-modal-all').remove();
+		});
+		
+		$('#delete-confirm-modal-all #btn-delete').click(function() {
+			selected = $('#content-notepad .table-list input:checkbox:checked');
+			$.each(selected, function(index, value) {
+				id = $(value).attr('id').split('-')[2];
+				console.log("Deleting note "+id);
+				deleteNote(id, false, true); //TODO: Do we have to refresh everytime?
+			});
+			console.log("Deleting notes");
+			//refreshNotes();
+			$('#delete-confirm-modal-all').modal('hide');
+			$('#delete-confirm-modal-all').remove();
+		});
+		
+		$('#delete-confirm-modal-all').modal();
+	});
+	
 	$('#btn-note-add').live('click', function() {
 		$.validator.setDefaults({
 			showError: function(errorMap, errorList) { },
@@ -330,7 +365,7 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 {
 	note = $('#content-notepad .table-list tbody');
 	note.append('<tr><td class="note-select hide">'+
-				'<input type="checkbox"/></td>'+
+				'<input id="note-check-'+id+'" type="checkbox"/></td>'+
 				'<td><a href="#" id="note-'+id+'">'+title+'</a>'+
 				'<div class="table-hide" id="note-hide-'+id+'">'+
 				'<span id="note-content-'+id+'">'+
@@ -354,6 +389,7 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 
 function notify(text, type, persist, container)
 {
+	type = (typeof container === "undefined")?'alert-info':type;
 	container = (typeof container === "undefined")?'#notification-wrapper':container;
 	persist = (typeof persist === "undefined")?false:persist;
 	
@@ -565,7 +601,7 @@ function deleteNote(id, notify, refresh)
         (typeof refresh === "undefined")?true:refresh;
         (typeof notify === "undefined")?true:notify;
 
-        $.get(URL+'/notes/delete?_id='+id, function(data) {
+        $.get('/notes/delete?_id='+id, function(data) {
 		if(refresh) refreshNotes();
                 if(notify) notify('Note deleted successfully!', 'alert-success');
         });
