@@ -1,19 +1,23 @@
+// Applications that will be loaded in the interface
+APPS = { notepad : {'name' : 'notepad', 'title' : 'OI Notepad'},
+	 shoppinglist : { name : 'shoppinglist', title : 'OI Shopping List'}
+};
+
 $(document).ready(function() {
 	
-	initialize();
+	// Resize UI if Window is resized
+	$(window).resize(function() { resizeUI(); });
 	
 	$('.nav-active').show();
 	$('#nav-home').parent().addClass('nav-active'); // Set home as the default active link
 	$('#content-home').addClass('content-active');
 	
-	$('div').filter(function() {
-		return this.id.match(/content-[^home].*/);
-	}).hide();
+	initialize();
 	
-	setupUI();
 	setupEvents();
+	setupUI();
 	
-	$('#nav').addClass('shown');
+	//$('#nav').addClass('shown');
 	
 	refreshUI();
 	
@@ -51,11 +55,23 @@ var Settings = new function() {
 	}
 }
 
+// Loads App scripts
+function loadScripts() {
+	console.log('Loading scripts');
+	for(a in APPS) {
+	    value = APPS[a];
+	    addScript('apps/'+value['name']+'/'+value['name']+'.js');
+	}
+}
+
+
 // Initializes the interface and fetches any data from the server
 // Does not do anything useful for now, just displays a simple progressbar dialog
 // Also initializes settings
 
 function initialize() {
+  
+	// Initialize the settings
 	set = Settings.get();
 	
 	if(typeof set['showSidebar'] === 'undefined') {
@@ -63,31 +79,62 @@ function initialize() {
 	}
 	
 	if(typeof set['showApps'] === 'undefined') {
-		apps = {'notepad' : true, 'shoppinglist' : false};
+		apps = {};
+		$.each(APPS, function(index, value) {
+		    apps[value['name']] = true;
+		});
+		
 		Settings.set('showApps', apps);
 	}
 	
 	if(typeof set['theme'] === 'undefined') {
 		Settings.set('theme', 'default');
 	}
+	
+	$.each(APPS, function(index, value) {
+	    text = '<label><input id="settingShow-'+value['name']+'" type="checkbox"/>&nbsp;'+value['title']+'</input></label>';
+	    $('#settingShowApplications').append(text);
+	    $('<link>').attr('rel', 'stylesheet')
+	    .attr('href', 'apps/'+value['name']+'/style.css')
+	    .attr('type', 'text/css')
+	    .appendTo('head');
+	    
+	    //$.getScript('apps/'+value['name']+'/'+value['name']+'.js').done(function() { $('body').trigger(value['name']+'-initialize'); });
+	});
+	
+	$(document.body).trigger('initialize');
 }
+
+function addScript(url){
+        // add script
+        var script   = document.createElement("script");
+        script.type  = "text/javascript";
+        script.src   = url;
+        document.body.appendChild(script);
+
+        // remove from the dom
+        //document.body.removeChild(document.body.lastChild);
+}
+
 
 function setupUI() {
 	
 	/*$('.active').show();
 	$('#nav-home').parent().addClass('active'); // Set home as the default active link*/
 	
-	var navcontent = '<div class="nav-content"><button class="btn" data-switch="home">&larr; Back</button></div>';
+	/*var navcontent = '<div class="nav-content"><button class="btn" data-switch="home">&larr; Back</button></div>';
 	
-	$('div').filter(function() {
-		return this.id.match(/^content-[^home].*/ig);
-	}).prepend(navcontent);
+	$('div').filter(function() {*/
+	//      return this.id.match(/^content-[^home].*/ig);
+	//).prepend(navcontent);
 	
+	$('body').trigger('setupUI');
+    
 }
 
 function setupEvents() {
 	
-	$('a[data-switch], button[data-switch]').click(function(event) {
+	$('a[data-switch], button[data-switch]').live('click', function(event) {
 		//var id = $(this).attr('data-switch').split('-');
 		//switchTo(id[1]);
 		switchTo($(this).attr('data-switch'));
@@ -107,8 +154,13 @@ function setupEvents() {
 	});
 	
 	$('#settingsSave').click(function() {
-		array = {'notepad' : $('#settingShowNotepad').is(':checked'), 
-				'shoppinglist' : $('#settingShowShoppingList').is(':checked')};
+		array = {};
+		$.each(APPS, function(index, value) {
+		    array[value['name']] = $('#settingShow-'+value['name']).is(':checked')
+		});
+		
+		//array = {'notepad' : $('#settingShow-notepad').is(':checked'), 
+		//		'shoppinglist' : $('#settingShowShoppingList').is(':checked')};
 		Settings.set('showApps', array);
 		theme = $('#settingThemeSelect option').filter(':selected').text().toLowerCase();
 		Settings.set('theme', theme);
@@ -117,164 +169,11 @@ function setupEvents() {
 		refreshUI();
 	});
 	
-	// Expand contents when a note is clicked
-	$('.table-list tr td a').live('click.#', function(e) {
-		e.preventDefault();
-		var current = $(this).parent().children('.table-hide');
-		if(current.attr('class').indexOf('table-hide-shown') != -1) // Element is current displayed
-		{
-			current.hide('slideUp');
-			current.removeClass('table-hide-shown');
-			$(this).removeClass('table-list-active');
-			return;
-		}
-		
-		$('.table-hide').hide('slideUp');
-		$('.table-hide').removeClass('table-hide-shown');
-		$('.table-list-active').removeClass('table-list-active');
-		
-		current.show('slideDown');
-		current.addClass('table-hide-shown');
-		$(this).addClass('table-list-active');
-	});
-	
-	// Show textarea when user clicks the edit button on a note
-	$('.button-edit').live('click', function(e) {
-		e.preventDefault();
-		var parent = $(this).parent();
-		var id = parent.attr('id');
-		id = id.split('-')[2];
-		
-		$('#note-content-'+id).hide();
-		$('#note-edit-'+id).show('slideDown');
-		
-		$('#note-edit-'+id+' .button-save').click(function() {
-			//notify('Saving note....', 'alert-info');
-			updateNote(id);
-		});
-		
-		$('#note-edit-'+id+' .button-cancel').click(function() {
-			$('#note-edit-'+id).hide();
-			$('#note-content-'+id).show();
-		});
-		
-	});
-	
-	$('.button-delete').live('click', function() {
-		var parent = $(this).parent();
-		var id = parent.attr('id');
-		id = id.split('-')[2];
-		
-		dialog = '<div id="delete-confirm-modal-'+id+'" class="modal hide">'+
-				 '<div class="modal-body">'+
-				 '<p>Are you sure you wish to delete this item?</p>'+
-				 '</div>'+
-				 '<div class="modal-footer">'+
-				 '<a id="btn-close" href="#" class="btn" data-dismiss="modal">Cancel</a>'+
-				 '<a id="btn-delete" href="#" class="btn btn-primary">Delete</a>'+
-				 '</div></div>';
-		
-		$('body').append(dialog);
-		
-		$('#delete-confirm-modal-'+id+' #btn-close').click(function(e) {
-			e.preventDefault();
-			$('#delete-confirm-modal-'+id).modal('hide');
-			$('#delete-confirm-modal-'+id).remove();
-		});
-		
-		$('#delete-confirm-modal-'+id+' #btn-delete').click(function() {
-			deleteNote(id);
-			$('#delete-confirm-modal-'+id).modal('hide');
-			$('#delete-confirm-modal-'+id).remove();
-		});
-		
-		$('#delete-confirm-modal-'+id).modal();
-	});
-	
-	$('.button-note-add').live('click', function() {
-		
-		if(screen.width >= 979) { // Desktop
-			$('#add-note-modal').addClass('modal');
-			$('#add-note-modal').modal();
-		}
-		else { // Mobile
-			$('#add-note-phone').show();
-		}
-	});
-	
-	// Toggle note selection
-	$('#notepad-action-toggle').live('click', function() {
-		$('.note-select').toggle();
-		// Deselect all notes
-		$('#content-notepad .table-list input:checkbox').attr('checked', false);
-	});
-	
-	// Select all notes
-	$('#notepad-action-selectall').live('click', function() {
-		$('#content-notepad .table-list input:checkbox').attr('checked', true);
-	});
-	
-	// Deselect all notes
-	$('#notepad-action-deselectall').live('click', function() {
-		$('#content-notepad .table-list input:checkbox').attr('checked', false);
-	});
-	
-	// Delete selected notes
-	$('#notepad-action-deleteselected').live('click', function() {
-		dialog = '<div id="delete-confirm-modal-all" class="modal hide">'+
-				 '<div class="modal-body">'+
-				 '<p>Are you sure you wish to delete all selected items?</p>'+
-				 '</div>'+
-				 '<div class="modal-footer">'+
-				 '<a id="btn-close" href="#" class="btn" data-dismiss="modal">Cancel</a>'+
-				 '<a id="btn-delete" href="#" class="btn btn-primary">Delete</a>'+
-				 '</div></div>';
-				 
-		$('body').append(dialog);
-		
-		$('#delete-confirm-modal-all #btn-close').click(function(e) {
-			e.preventDefault();
-			$('#delete-confirm-modal-all').modal('hide');
-			$('#delete-confirm-modal-all').remove();
-		});
-		
-		$('#delete-confirm-modal-all #btn-delete').click(function() {
-			selected = $('#content-notepad .table-list input:checkbox:checked');
-			$.each(selected, function(index, value) {
-				id = $(value).attr('id').split('-')[2];
-				console.log("Deleting note "+id);
-				deleteNote(id, false, true); //TODO: Do we have to refresh everytime?
-			});
-			console.log("Deleting notes");
-			//refreshNotes();
-			$('#delete-confirm-modal-all').modal('hide');
-			$('#delete-confirm-modal-all').remove();
-		});
-		
-		$('#delete-confirm-modal-all').modal();
-	});
-	
-	$('#btn-note-add').live('click', function() {
-		$.validator.setDefaults({
-			showError: function(errorMap, errorList) { },
-		});
-		
-		if(!$('#form-note-add').valid()) {
-			return;
-		}
-		//notify('Saving note....', 'alert-info');
-		addNewNote('#form-note-add');
-		$('#add-note-modal').modal('hide');
-	});
-	
-	$('#btn-note-close-phone').live('click', function() {
-		$('#add-note-phone').slideUp();
-		
-	});
-	
 	$('#menuLogout').click(function() {
 			logout();		
 	});
+	
+	$('body').trigger('setupEvents');
 }
 
 function refreshUI() {
@@ -299,37 +198,14 @@ function refreshUI() {
 	/*theme = '<link rel="stylesheet" href="themes/'+set['theme']+'/theme.css" media="screen"/>';
 	$('head').append(theme);*/
 	
-	$('#settingShowNotepad').attr('checked', set['showApps']['notepad']);
-	$('#settingShowShoppingList').attr('checked', set['showApps']['shoppinglist']);
+	/*$('#settingShowNotepad').attr('checked', set['showApps']['notepad']);
+	$('#settingShowShoppingList').attr('checked', set['showApps']['shoppinglist']);*/
 	
-	if(set['showApps']['notepad'] == true) {
-		$('#content-notepad[class=content-active]').show();
-		$('#nav-notepad').parent().show();
-		$('a[data-switch=notepad]').parent().show();
-	}
-	else {
-		$('#content-notepad').hide();
-		$('a[data-switch=notepad]').parent().hide();
-		$('#nav-notepad').parent().hide();
-		if($('#content-notepad').hasClass('content-active')) {
-			switchTo('home');
-		}
-	}
+	$.each(APPS, function(index, value) {
+	    $('#settingShow-'+value['name']).attr('checked', set['showApps'][value['name']]);
+	});
 	
-	if(set['showApps']['shoppinglist'] == true) {
-		$('#content-shoppinglist[class=content-active]').show();
-		$('a[data-switch=shoppinglist]').parent().show();
-		$('#nav-shoppinglist').parent().show();
-		
-	}
-	else {
-		$('#content-shoppinglist').hide();
-		$('a[data-switch=shoppinglist]').parent().hide();
-		$('#nav-shoppinglist').parent().hide();
-		if($('#content-shoppinglist').hasClass('content-active')) {
-			switchTo('home');
-		}
-	}
+	$('body').trigger('refreshUI', [set]);
 	
 	//$('#content').css('margin-left','25%');
 	resizeUI();
@@ -353,38 +229,20 @@ function switchTo(id) {
 	$(contentid).addClass('content-active');
 	$(contentid).focus();
 	
-	if(id == 'notepad') { refreshNotes(); }
+	// Call trigger for the app that has been switched to
+	$('body').trigger(id+'-switched');
+	//if(id == 'notepad') { refreshNotes(); }
+}
+
+function addApplication(app) {
+	li = '<li><a href="#" id="nav-'+app['name']+'" data-switch="'+app['name']+'"><img src="'+app['icon-small']+'"/>'+app['title']+'</a></li>';
+	$('#nav .nav-list').append(li);
+	tr = '<tr><td><a href="#" data-switch="'+app['name']+'"><img src="'+app['icon-big']+'"/>'+app['title']+'</a></td></tr>';
+	$('#table-launchers').append(tr);
 }
 
 function removeActiveClass() {
 	$('.nav-active').removeClass('nav-active');
-}
-
-
-function insertNote(id, title, text, createdDate, modifiedDate)
-{
-	note = $('#content-notepad .table-list tbody');
-	note.append('<tr><td class="note-select hide">'+
-				'<input id="note-check-'+id+'" type="checkbox"/></td>'+
-				'<td><a href="#" id="note-'+id+'">'+title+'</a>'+
-				'<div class="table-hide" id="note-hide-'+id+'">'+
-				'<span id="note-content-'+id+'">'+
-				'<pre>'+text+'</pre><hr/>'+
-				'<button class="button-note-edit button-edit btn">Edit</button>'+
-				'<button class="button-note-delete button-delete btn">Delete</button>'+
-				'</span></div>');
-	
-	table_hide_edit = '<span id="note-edit-'+id+'" class="hide"><form>'+
-					  '<input name="title" type="text" value="'+title+'"/>'+
-					  '<textarea name="note">'+text+'</textarea>'+
-					  '<input type="hidden" name="_id" value="'+id+'"/></form>'+
-					  '<button class="button-note-save button-save btn btn-primary">Save</button>'+
-					  '<button class="button-note-cancel button-cancel btn">Cancel</button>'+
-					  '</span>';
-					  
-	note.append('</tr></td>');
-	
-	$('.table-hide #note-content-'+id).parent().append(table_hide_edit);
 }
 
 function notify(text, type, persist, container)
@@ -429,7 +287,7 @@ function hideMenu()
 function toggleSidebar()
 {
 	var classes = $('#nav').attr('class');
-	if(classes.indexOf('shown') < 0) // Sidebar is hidden
+	if(!$('#nav').is(':visible')) // Sidebar is hidden
 	{
 		sidebar('show');
 		Settings.set('showSidebar', true);
@@ -446,11 +304,11 @@ function toggleSidebar()
 function sidebar(action)
 {
 	if(action == 'hide') {
-		$('#nav').removeClass('shown');
+		//$('#nav').removeClass('shown');
 		$('#nav').hide('slow', function() { resizeUI(); });
 	}
 	else {
-		$('#nav').addClass('shown');
+		//$('#nav').addClass('shown');
 		resizeUI();
 		$('#nav').show('slow');
 	}
@@ -460,7 +318,7 @@ function sidebar(action)
 
 function resizeUI()
 {
-	if($('#nav').attr('class').match(/.*shown.*/ig)) // Navbar is Shown
+	if($('#nav').is(':visible')) // Navbar is Shown
 	{
 		shown = true;
 		span = $('#content').attr('data-span-min');
@@ -515,98 +373,6 @@ $.ajaxSetup({
 		notify('Error performing operation: '+textStatus, 'alert-error'); 
 	}
 });
-
-function refreshNotes()
-{
-	showThrobber('#content-notepad');
-	
-	// Get all notes
-	$.getJSON('/notes/get', function(data) {
-		hideThrobber();
-		
-			
-			$('#content-notepad .table-list').remove();
-			$('#content-notepad').append('<table class="table-list">'+
-									'<thead><th>Title</th></thead>'+
-									'<tbody></tbody></table>');
-			
-			
-			
-			keys = sortNotes(data);
-			
-			
-			for(var i=0; i < keys.length; i++)
-			{
-					insertNote(data[keys[i]]._id, data[keys[i]].title,
-					data[keys[i]].note, data[keys[i]].created,
-					data[keys[i]].modified);			
-			}
-	});
-}
-
-function sortNotes(notes)
-{
-	var keys = [];
-	for (var x in notes)
-		notes.hasOwnProperty(x) && keys.push(x);
-	
-	keys = $.map(keys, Number);
-	
-	keys.sort(function(a, b) { return a - b; });
-	
-	keys.sort(function(a, b) {
-		return notes[b].modified - notes[a].modified;
-	});
-	
-	return keys;
-}
-
-function addNewNote(form)
-{
-	$.post('/notes/new', $(form).serialize(), function(data) {
-		/*if(data.code != 200) {
-			//alert("Error adding new note. The server says\n"+data['msg']); 
-			notify('An error occurred while adding a new note<br/>The server says: '+data['msg'], 'alert-error');
-		}
-		else {*/
-			refreshNotes();
-			if($('#add-note-modal').is(':hidden')) {
-				notify('Note saved successfully!', 'alert-success');
-			}
-			else {
-				notify('Note saved successfully!', 'alert-success', '#add-note-modal .modal-body');
-			}
-		//}
-	}, 'json');
-}
-
-function updateNote(id)
-{
-	postData = $('#note-edit-'+id+' form').serialize();
-	
-	$.post('/notes/update', postData, function(data) {
-		//console.log(data.code);
-		/*if(data.code != 200) {
-			notify('Error updating note: '+data['msg'], 'alert-error');
-		}
-		else {*/
-			refreshNotes();
-			notify('Note updated successfully!', 'alert-success');
-		//}
-	}, 'json');
-}
-
-function deleteNote(id, notify, refresh)
-{
-        (typeof refresh === "undefined")?true:refresh;
-        (typeof notify === "undefined")?true:notify;
-
-        $.get('/notes/delete?_id='+id, function(data) {
-		if(refresh) refreshNotes();
-                if(notify) notify('Note deleted successfully!', 'alert-success');
-        });
-}
-
 
 function logout()
 {

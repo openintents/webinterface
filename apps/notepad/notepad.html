@@ -1,0 +1,63 @@
+<div id="content-notepad" style="display: none">
+		<div class="nav-content"><button class="btn" data-switch="home">&larr; Back</button></div>
+		<h3>OI Notepad notes</h3>
+			<div class="btn-group btn-toolbar">
+				<div class="visible-desktop hide" id="add-note-modal">
+					<div class="modal-header">
+					    <button type="button" class="close" data-dismiss="modal">&times;</button>
+					    <h3>Add New Note</h3>
+					</div>
+					<div class="modal-body well">
+						<form id="form-note-add">
+							<label of="title" class="control-label">Title</label>
+							<input type="text" name="title" class="required input-xlarge"/>
+							<label of="note" class="control-label">Text</label>
+							<textarea name="note" class="required input-xlarge"></textarea>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<a id="btn-note-close" href="#" class="btn" data-dismiss="modal">Close</a>
+						<a id="btn-note-add" href="#" class="btn btn-primary">Add</a>
+					</div>
+					</div>
+						
+					<button id="btn-new-note" class="button-note-add button-add btn">
+						<i class="icon-plus"></i>
+						    New Note
+					</button>
+					
+					<div class="btn-group">
+						<button class="button-note-select button-select btn" data-toggle="dropdown">
+							Actions
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a id="notepad-action-toggle" href="#">Toggle Selection</a></li>
+							<li><a id="notepad-action-selectall" href="#">Select All</a></li>
+							<li><a id="notepad-action-deselectall" href="#">Deselect All</a></li>
+							<li><a id="notepad-action-deleteselected" href="#">Delete Selected</a></li>
+						</ul>
+					<!--<button class="button-note-delete button-delete btn"><i class="icon-remove"></i>Delete</button>-->
+					</div> <!-- .btn-group -->
+					<div id="add-note-phone" class="hide">
+						<div class="well">
+							<form id="form-note-add">
+								<label of="title" class="control-label">Title</label>
+								<input type="text" name="title" class="input-xlarge"/>
+								<label of="text" class="control-label">Text</label>
+								<textarea name="text" class="input-xlarge"></textarea>
+							</form>
+							<a id="btn-note-close-phone" href="#" class="btn push-left">Close</a>
+							<a id="btn-note-add" href="#" class="btn btn-primary push-left">Add</a>
+						</div>
+					</div>
+					</div>
+					<table class="table-list hide">
+						<thead>
+							<th>Title</th>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+</div> <!-- #content-notepad -->
