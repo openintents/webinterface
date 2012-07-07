@@ -364,10 +364,6 @@ function removeActiveClass() {
 function insertNote(id, title, text, createdDate, modifiedDate)
 {
 	note = $('#content-notepad .table-list tbody');
-	
-	title = jQuery("<div/>").text(title).html();
-	text = jQuery("<div/>").text(text).html();
-	
 	note.append('<tr><td class="note-select hide">'+
 				'<input id="note-check-'+id+'" type="checkbox"/></td>'+
 				'<td><a href="#" id="note-'+id+'">'+title+'</a>'+
@@ -393,7 +389,7 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 
 function notify(text, type, persist, container)
 {
-	type = (typeof container === "undefined")?'alert-info':type;
+	type = (typeof type === "undefined")?'alert-info':type;
 	container = (typeof container === "undefined")?'#notification-wrapper':container;
 	persist = (typeof persist === "undefined")?false:persist;
 	
