@@ -1,9 +1,11 @@
 // Applications that will be loaded in the interface
-APPS = { notepad : {'name' : 'notepad', 'title' : 'OI Notepad'},
+APPS = { notepad : {name : 'notepad', title : 'OI Notepad'},
 	 shoppinglist : { name : 'shoppinglist', title : 'OI Shopping List'}
 };
 
-$(document).ready(function() {
+loadScripts();
+
+head.ready(function() {
 	
 	// Resize UI if Window is resized
 	$(window).resize(function() { resizeUI(); });
@@ -60,7 +62,8 @@ function loadScripts() {
 	console.log('Loading scripts');
 	for(a in APPS) {
 	    value = APPS[a];
-	    addScript('apps/'+value['name']+'/'+value['name']+'.js');
+	    head.js('apps/'+value['name']+'/'+value['name']+'.js')
+	    //addScript('apps/'+value['name']+'/'+value['name']+'.js');
 	}
 }
 
@@ -239,6 +242,7 @@ function addApplication(app) {
 	$('#nav .nav-list').append(li);
 	tr = '<tr><td><a href="#" data-switch="'+app['name']+'"><img src="'+app['icon-big']+'"/>'+app['title']+'</a></td></tr>';
 	$('#table-launchers').append(tr);
+	refreshUI();
 }
 
 function removeActiveClass() {

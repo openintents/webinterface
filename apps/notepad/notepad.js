@@ -95,7 +95,7 @@ function setupNotepadEvents()
 		});
 		
 		$('#delete-confirm-modal-'+id+' #btn-delete').click(function() {
-			deleteNote(id);
+			deleteNote(id, true, true);
 			$('#delete-confirm-modal-'+id).modal('hide');
 			$('#delete-confirm-modal-'+id).remove();
 		});
@@ -310,13 +310,13 @@ function updateNote(id)
 	}, 'json');
 }
 
-function deleteNote(id, notify, refresh)
+function deleteNote(id, notif, refresh)
 {
         (typeof refresh === "undefined")?true:refresh;
-        (typeof notify === "undefined")?true:notify;
+        (typeof notify === "undefined")?true:notif;
 
         $.get('/notes/delete?_id='+id, function(data) {
-		if(refresh) refreshNotes();
-                if(notify) notify('Note deleted successfully!', 'alert-success');
+        		if(refresh) refreshNotes();
+                if(notif) notify('Note deleted successfully!', 'alert-success');
         });
 }

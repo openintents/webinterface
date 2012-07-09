@@ -109,17 +109,19 @@
 		</footer>
 		<div id="notification-wrapper"></div>
 		
-		<script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
-		<script src="js/jquery.cookie.js" type="text/javascript"></script>
-		<script src="js/jquery.json-2.3.min.js" type="text/javascript"></script>
-		<script src="js/bootstrap-alert.js" type="text/javascript"></script>
-		<script src="js/bootstrap-dropdown.js" type="text/javascript"></script>
-		<script src="js/bootstrap-modal.js" type="text/javascript"></script>
-		<script src="js/bootstrap-collapse.js" type="text/javascript"></script>
-		<script src="js/jquery.validate.min.js" type="text/javascript"></script>
-		<script src="apps/notepad/notepad.js" type="text/javascript"></script>
-		<script src="apps/shoppinglist/shoppinglist.js" type="text/javascript"></script>
-		<script src="js/scripts.js" type="text/javascript"></script>
+		<script src="js/head.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			head.js("js/jquery-1.7.2.min.js",
+					"js/jquery.cookie.js",
+					"js/jquery.json-2.3.min.js",
+					"js/bootstrap-alert.js",
+					"js/bootstrap-dropdown.js",
+					"js/bootstrap-modal.js",
+					"js/bootstrap-collapse.js",
+					"js/jquery.validate.min.js",
+					"js/scripts.js");
+		</script>
+		
 </body>
 </html>
 
