@@ -2,3 +2,19 @@
       background-color: green !important;
       text-decoration: line-through;
 }
+
+.item-priority, .item-qty, .item-units {
+	width: 1em;
+}
+
+.item-item, .item-tags {
+	width: 4em;
+}
+
+#shoppinglist-items ul a {
+	padding: 0 4px;
+}
+
+#shoppinglist-items input {
+	width: 4em;
+}

@@ -1,6 +1,6 @@
 <div id="content-shoppinglist" style="display: none">
 	<div class="nav-content"><button class="btn" data-switch="home"><i class="icon-arrow-left"></i>&nbsp;Back</button></div>
-	<h3>OI Shopping List lists</h3>
+		<h3>OI Shopping List lists</h3>
 		<button id="shoppinglist-btn-new-list" class="btn">
 		      <i class="icon-plus"></i>
 		      New List
@@ -23,6 +23,20 @@
 		      Add Item
 		  </button>
 		</div>
+		<div id="inline-add-item" class="hide">
+			<table>
+				<tbody>
+					<tr><td><label>Name: <input type="text" placeholder="Item Name"/></label></td></tr>
+					<tr><td><label>Priority: <input type="text" placeholder="Priority"/></label></td></tr>
+					<tr><td><label>Price:<input type="text" placeholder="Price"/></label></td></tr>
+					<tr><td><label>Quantity:<input type="text" placeholder="Quantity"/></label></td>
+					<td><label>Units:<input type="text" placeholder="Units"/></label></td></tr>
+					<tr><td><label>Tags:<input type="text" placeholder="Tags"/></label></td></tr>
+				</tbody>
+			</table>
+			<a href="#" id="inline-btn-cancel" class="btn" data-dismiss="modal">Cancel</a>
+			<a href="#" id="inline-btn-add-item" class="btn btn-primary">Add</a>
+		</div>
 		
 		<table id="shoppinglist-items" class="table-list">
 			<thead>
@@ -37,5 +51,29 @@
 			<tbody>
 			</tbody>
 		</table>
-	  
+		
+		<div id="modal-add-item" class="hide">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h3>Add new item</h3>
+			</div>
+			<div class="modal-body well">
+				<table>
+					<tbody>
+						<tr><td><label>Name: <input type="text" placeholder="Item Name"/></label></td></tr>
+						<tr><td><label>Priority: <input type="text" placeholder="Priority"/></label></td></tr>
+						<tr><td><label>Price:<input type="text" placeholder="Price"/></label></td></tr>
+						<tr><td><label>Quantity:<input type="text" placeholder="Quantity"/></label></td>
+							<td><label>Units:<input type="text" placeholder="Units"/></label></td></tr>
+						<tr><td><label>Tags:<input type="text" placeholder="Tags"/></label></td></tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+				<a href="#" id="btn-add-item" class="btn btn-primary">Add</a>
+			</div>
+		</div>
+						
+				
 </div> <!-- #content-shoppinglist -->

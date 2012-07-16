@@ -1,10 +1,10 @@
 // Contains script specific to OI Notepad
 
 // Bind triggers
-$('body').bind('initialize', function() { initNotepad(); });
-$('body').bind('setupEvents', function() { setupNotepadEvents(); });
-$('body').bind('refreshUI', function(event, set) { notepadRefreshUI(set); });
-$('body').bind('notepad-switched', function() { notepadSwitched() });
+$(document).on('initialize', function() { initNotepad(); });
+$(document).on('setupEvents', function() { setupNotepadEvents(); });
+$(document).on('refreshUI', function(event, set) { notepadRefreshUI(set); });
+$(document).on('notepad-switched', function() { notepadSwitched() });
 
 // OI Notepad specific functions
 
@@ -29,7 +29,7 @@ function notepadSwitched() {
 function setupNotepadEvents()
 {
 	// Expand contents when a note is clicked
-	$('#content-notepad .table-list tr td a').live('click.#', function(e) {
+	$(document).on('click.#', '#content-notepad .table-list tr td a', function(e) {
 		e.preventDefault();
 		var current = $(this).parent().children('.table-hide');
 		if(current.attr('class').indexOf('table-hide-shown') != -1) // Element is current displayed
@@ -50,7 +50,7 @@ function setupNotepadEvents()
 	});
   
 	// Show textarea when user clicks the edit button on a note
-	$('.button-edit').live('click', function(e) {
+	$(document).on('click', '.button-edit', function(e) {
 		e.preventDefault();
 		var parent = $(this).parent();
 		var id = parent.attr('id');
@@ -72,7 +72,7 @@ function setupNotepadEvents()
 	});
 	
 	// Event the delete button is clicked
-	$('.button-note-delete').live('click', function() {
+	$(document).on('click', '.button-note-delete', function() {
 		var parent = $(this).parent();
 		var id = parent.attr('id');
 		id = id.split('-')[2];
@@ -104,35 +104,35 @@ function setupNotepadEvents()
 	});
 	
 	// Event when the add note button is clicked
-	$('.button-note-add').live('click', function() {
+	$(document).on('click', '.button-note-add', function() {
 		if(screen.width >= 979) { // Desktop
 			$('#add-note-modal').addClass('modal');
 			$('#add-note-modal').modal();
 		}
 		else { // Mobile
-			$('#add-note-phone').show();
+			$('#modal-note-phone').show();
 		}
 	});
 	
 	// Toggle note selection
-	$('#notepad-action-toggle').live('click', function() {
+	$(document).on('click', '#notepad-action-toggle', function() {
 		$('.note-select').toggle();
 		// Deselect all notes
 		$('#content-notepad .table-list input:checkbox').attr('checked', false);
 	});
 	
 	// Select all notes
-	$('#notepad-action-selectall').live('click', function() {
+	$(document).on('click', '#notepad-action-selectall', function() {
 		$('#content-notepad .table-list input:checkbox').attr('checked', true);
 	});
 	
 	// Deselect all notes
-	$('#notepad-action-deselectall').live('click', function() {
+	$(document).on('click', '#notepad-action-deselectall', function() {
 		$('#content-notepad .table-list input:checkbox').attr('checked', false);
 	});
 	
 	// Delete selected notes
-	$('#notepad-action-deleteselected').live('click', function() {
+	$(document).on('click', '#notepad-action-deleteselected', function() {
 		dialog = '<div id="delete-confirm-modal-all" class="modal hide">'+
 				 '<div class="modal-body">'+
 				 '<p>Are you sure you wish to delete all selected items?</p>'+
@@ -166,7 +166,7 @@ function setupNotepadEvents()
 		$('#delete-confirm-modal-all').modal();
 	});
 	
-	$('#btn-note-add').live('click', function() {
+	$(document).on('click', '#btn-note-add', function() {
 		$.validator.setDefaults({
 			showError: function(errorMap, errorList) { },
 		});
@@ -179,7 +179,7 @@ function setupNotepadEvents()
 		$('#add-note-modal').modal('hide');
 	});
 	
-	$('#btn-note-close-phone').live('click', function() {
+	$(document).on('click', '#btn-note-close-phone', function() {
 		$('#add-note-phone').slideUp();
 		
 	});

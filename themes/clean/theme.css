@@ -258,7 +258,7 @@ hr {
 
 .table-list tbody tr, .table-hide {
 	background-color: #dcdcdc;
-	color: #fff;
+	/*color: #fff;*/
 }
 
 .table-list tr {
