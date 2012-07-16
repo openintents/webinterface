@@ -29,7 +29,7 @@ head.ready(function() {
 	
 	//Hide the loading screen
 	$('.lightbox_bg').hide();
-	$('.modal_load').hide();
+	$('#loading').hide();
 });
 
 // Provides settings retrieving and saving via cookies
@@ -131,13 +131,13 @@ function setupUI() {
 	//      return this.id.match(/^content-[^home].*/ig);
 	//).prepend(navcontent);
 	
-	$('body').trigger('setupUI');
+	$(document.body).trigger('setupUI');
     
 }
 
 function setupEvents() {
 	
-	$('a[data-switch], button[data-switch]').live('click', function(event) {
+	$(document).on('click', 'a[data-switch], button[data-switch]', function(event) {
 		//var id = $(this).attr('data-switch').split('-');
 		//switchTo(id[1]);
 		switchTo($(this).attr('data-switch'));
@@ -176,7 +176,7 @@ function setupEvents() {
 			logout();		
 	});
 	
-	$('body').trigger('setupEvents');
+	$(document.body).trigger('setupEvents');
 }
 
 function refreshUI() {
@@ -208,7 +208,7 @@ function refreshUI() {
 	    $('#settingShow-'+value['name']).attr('checked', set['showApps'][value['name']]);
 	});
 	
-	$('body').trigger('refreshUI', [set]);
+	$(document.body).trigger('refreshUI', [set]);
 	
 	//$('#content').css('margin-left','25%');
 	resizeUI();
@@ -233,7 +233,7 @@ function switchTo(id) {
 	$(contentid).focus();
 	
 	// Call trigger for the app that has been switched to
-	$('body').trigger(id+'-switched');
+	$(document.body).trigger(id+'-switched');
 	//if(id == 'notepad') { refreshNotes(); }
 }
 

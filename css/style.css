@@ -143,6 +143,17 @@ html, body {
 	border-radius: 4px;
 }
 
+#loading {
+	padding: 10px;
+	width: 15%;
+	position: relative;
+	top: 45%;
+	bottom: 45%;
+	left: 45%;
+	right: 45%;
+	margin: 0;
+}
+
 .list-inline {
 	display: inline;
 	list-style: none;

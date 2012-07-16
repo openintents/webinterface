@@ -6,6 +6,13 @@ $(document).on('setupEvents', function() { setupShoppingListEvents(); });
 $(document).on('refreshUI', function(event, set) { shoppingListRefreshUI(set); });
 $(document).on('shoppinglist-switched', function() { shoppingListSwitched() });
 
+// Get ID
+function getID(id) {
+	id = id.split('-');
+	id = id[id.length-1];
+	return id;
+}
+
 function initShoppingList() {
 	addApplication({'name' : 'shoppinglist', 'title' : 'OI Shopping List', 'icon-small' : 'images/oi-shoppinglist.png', 'icon-big' : 'images/ic_launcher_shoppinglist.png'});
     
@@ -36,8 +43,10 @@ function setupShoppingListEvents() {
 	$(document).on('click', '.item-action-delete', function() {
 		//console.log($(this).parent().attr('id'));
 		id = $(this).parent().attr('id');
-		id = id.split('-')[1];
-		$('#item-'+id).remove();
+		if(typeof id === "undefined") return true;
+		console.log(id);
+		id = getID(id);
+		deleteItem(id);
 	});
 
 	$(document).on('click', '.item-action-cancel', function() {
@@ -63,6 +72,26 @@ function setupShoppingListEvents() {
 		else {
 			$('#inline-add-item').slideDown();
 		}
+	});
+	
+	$(document).on('click', '#btn-add-item', function() {
+		var prefix = '#add-item-'; // Just so if we change prefix it'll be easy to just change it here
+		
+		item = $(prefix+'item').val();
+		priority = $(prefix+'priority').val();
+		price = $(prefix+'price').val();
+		qty = $(prefix+'qty').val();
+		units = $(prefix+'units').val();
+		tags = $(prefix+'tags').val();
+		
+		if(item == "") {
+			notify('Item name cannot be empty!', 'alert-error', true, '#modal-add-item .modal-body');
+			return;
+		}
+		
+		add = {id:100,item:item,priority:priority,price:price,qty:qty,units:units,tags:tags};
+		insertItem(add);
+		$('#modal-add-item').modal('hide');
 	});
 	
 	$(document).on('click', '#inline-btn-cancel', function() {
@@ -132,4 +161,10 @@ function editItem(id)
 {
 	$('#item-'+id).fadeOut();
 	$('#item-edit-'+id).fadeIn();
+}
+
+function deleteItem(id)
+{
+	$('#item-'+id).fadeOut(function() { $(this).remove() });
+	$('#item-edit-'+id).remove();
 }
