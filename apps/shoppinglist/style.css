@@ -11,10 +11,21 @@
 	width: 4em;
 }
 
+#shoppinglist-items a, #shoppinglist-list-manage a{
+	display: inline;
+}
 #shoppinglist-items ul a {
 	padding: 0 4px;
 }
 
 #shoppinglist-items input {
 	width: 4em;
+}
+
+#shoppinglist-items tr, #shoppinglist-list-manage tr {
+	height: 3em;
+}
+
+#shoppinglist-items td, #shoppinglist-list-manage td {
+	padding: 0.4em;
 }

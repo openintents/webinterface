@@ -25,12 +25,18 @@ function initShoppingList() {
 	// Fetch OI Notepad's HTML fragment and load it
 	$.get('apps/shoppinglist/shoppinglist.html', function(data) {
 	    $('#content').append(data);
-	    insertItem({id:1,priority:1,item:'Maggi',price:100,qty:1,units:'kg',tags:'food'});
-	    insertItem({id:2,priority:2,item:'Chips',price:100,qty:1,units:'kg',tags:'food'});
+	    // TODO: This is just for testing
+	    insertList(1, 'My Shopping List');
+	    loadList(1); // TODO: Load the first list at start (Only for testing)
+	    insertList(-1, '&lt;Manage&gt;');
+	   // insertItem({id:1,priority:1,item:'Maggi',price:100,qty:1,units:'kg',tags:'food'});
+	   // insertItem({id:2,priority:2,item:'Chips',price:100,qty:1,units:'kg',tags:'food'});
 	});
 }
 
 function setupShoppingListEvents() {
+
+	// Edit item event
 	$(document).on('click', '.item-action-edit', function() {
 		id = $(this).parent().attr('id');
 		if(typeof id === "undefined") return true;
@@ -40,6 +46,7 @@ function setupShoppingListEvents() {
 		return false;
 	});
 	
+	// Delete item event
 	$(document).on('click', '.item-action-delete', function() {
 		//console.log($(this).parent().attr('id'));
 		id = $(this).parent().attr('id');
@@ -49,6 +56,7 @@ function setupShoppingListEvents() {
 		deleteItem(id);
 	});
 
+	// Cancel item event
 	$(document).on('click', '.item-action-cancel', function() {
 		id = $(this).parent().attr('id');
 		if(typeof id === "undefined") return true;
@@ -59,6 +67,7 @@ function setupShoppingListEvents() {
 		return false;
 	});
 	
+	// Add item event
 	$(document).on('click', '#shoppinglist-btn-add-item', function() {
 		//console.log(screen.width);
 		if(screen.width >= 979) {
@@ -74,6 +83,7 @@ function setupShoppingListEvents() {
 		}
 	});
 	
+	// Add item dialog event
 	$(document).on('click', '#btn-add-item', function() {
 		var prefix = '#add-item-'; // Just so if we change prefix it'll be easy to just change it here
 		
@@ -94,8 +104,25 @@ function setupShoppingListEvents() {
 		$('#modal-add-item').modal('hide');
 	});
 	
+	// Cancel inline edit
 	$(document).on('click', '#inline-btn-cancel', function() {
 		$('#inline-add-item').slideUp();
+	});
+	
+	$(document).on('change', '#shoppinglist-list', function() {
+		val = $(this).val();
+		
+		if(val == -1) {
+			//console.log('Manage list');
+			$('#shoppinglist-list-manage').slideDown();
+			$('#shoppinglist-items').fadeOut();
+		}
+		else {
+			//console.log('Loading list '+val);
+			loadList(val);	
+		}
+		
+		
 	});
 }
 
@@ -121,13 +148,45 @@ function shoppingListSwitched() {
 }
 
 function loadList(id) {
+	items = getList(id);
+	$('#shoppinglist-list-manage').slideUp();
+	$('#shoppinglist-items').fadeIn();
+	// Select the list option
+	$('#shoppinglist-list option[value='+id+']').attr('selected', 'selected');
+	$('#shoppinglist-items tbody').html('');
+	for(i=0; i < items.length; i++) {
+		insertItem(items[i]);
+		//console.log(items[i].id);
+	}
+}
+function getList(id) {
 	// TODO: Use a REST call to load the list
-	LIST = {id : 1, name : 'My Shopping List'};
+	if(id == 1) {
+		items = '[';
+		for(i=1; i <= 6; i++) {
+			
+			item = '{"id":'+i+',"priority":1,"item":"Item '+i+'","price":100,'+
+				'"qty":1,"units":"kg","tags":"food"}';
+			delim = ',';
+			if(i == 1) delim = '';
+			items = items + delim + item;
+		}
+		items += ']';
+		//console.log(items);
+		//LIST = {id : 1, name : 'My Shopping List'};
+		return $.evalJSON(items);
+	}
 }
 
 function insertList(id, name) {
-	list = '<option id="'+id+'">'+name+'</option>';
+	list = '<option value="'+id+'">'+name+'</option>';
 	$('#shoppinglist-list').append(list);
+	if(id != -1) {// Skip the '<Manage>' list item
+		$('#shoppinglist-list-manage tbody').append('<tr><td>'+
+		name+'</td><td><a href="#" id="list-action-edit-'+id+'">'+
+		'<i id="list-action-edit" class="icon-pencil list-action-edit">'+
+		'</i></a></td></tr>');
+	}
 }
 
 function insertItem(item)
