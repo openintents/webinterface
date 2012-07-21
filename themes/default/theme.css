@@ -172,9 +172,8 @@ hr {
 	color: #fff;
 }
 
-#table-launchers {
-	border-radius: 5px;
-	background-color: #1f1f1f;
+#table-launchers-wrap {
+	position: relative;
 }
 
 #table-launchers td {
@@ -188,7 +187,7 @@ hr {
 }
 
 #table-launchers td a:hover {
-	background-color: #000000;
+	background-color: #2E2E2E;
 }
 
 #footer, #push {
