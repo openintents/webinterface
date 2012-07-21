@@ -114,8 +114,9 @@ function setupShoppingListEvents() {
 		
 		if(val == -1) {
 			//console.log('Manage list');
-			$('#shoppinglist-list-manage').slideDown();
-			$('#shoppinglist-items').fadeOut();
+			$('#shoppinglist-items').fadeOut(function() {
+				$('#shoppinglist-list-manage').slideDown();
+			});
 		}
 		else {
 			//console.log('Loading list '+val);
@@ -149,8 +150,10 @@ function shoppingListSwitched() {
 
 function loadList(id) {
 	items = getList(id);
-	$('#shoppinglist-list-manage').slideUp();
-	$('#shoppinglist-items').fadeIn();
+	$('#shoppinglist-list-manage').slideUp(function() {
+		$('#shoppinglist-items').fadeIn();
+	});
+	
 	// Select the list option
 	$('#shoppinglist-list option[value='+id+']').attr('selected', 'selected');
 	$('#shoppinglist-items tbody').html('');
