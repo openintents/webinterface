@@ -115,7 +115,8 @@ function setupShoppingListEvents() {
 		if(val == -1) {
 			//console.log('Manage list');
 			$('#shoppinglist-items').fadeOut(function() {
-				$('#shoppinglist-list-manage').slideDown();
+				$('#shoppinglist-btn-container').fadeOut();
+				$('#shoppinglist-list-manage-container').slideDown();
 			});
 		}
 		else {
@@ -124,6 +125,24 @@ function setupShoppingListEvents() {
 		}
 		
 		
+	});
+	
+	// Show Add List dialog
+	$(document).on('click', 'button[data-action=list-add-show]', function() {
+			$('#shoppinglist-list-add-container').slideDown();
+	});
+	
+	// Close Add List dialog
+	$(document).on('click', 'button[data-action=list-add-close]', function() {
+			$('#shoppinglist-list-add-container').slideUp();
+	});
+	
+	// Add list
+	$(document).on('click', 'button[data-action=list-add-add]', function() {
+			name = $('input[name=list-add-name]').val();
+			insertList(Math.floor(Math.random()*1000), name);
+			$('#shoppinglist-list-add-container').slideUp();
+			notify('New list added successfully!', 'alert-success');
 	});
 }
 
@@ -150,8 +169,9 @@ function shoppingListSwitched() {
 
 function loadList(id) {
 	items = getList(id);
-	$('#shoppinglist-list-manage').slideUp(function() {
+	$('#shoppinglist-list-manage-container').slideUp(function() {
 		$('#shoppinglist-items').fadeIn();
+		$('#shoppinglist-btn-container').fadeIn();
 	});
 	
 	// Select the list option
@@ -188,7 +208,7 @@ function insertList(id, name) {
 		$('#shoppinglist-list-manage tbody').append('<tr><td>'+
 		name+'</td><td><a href="#" id="list-action-edit-'+id+'">'+
 		'<i id="list-action-edit" class="icon-pencil list-action-edit">'+
-		'</i></a></td></tr>');
+		'</i></a><a href="#" id="list-action-delete-'+id+'"><i id="list-action-delete" class="icon-remove list-action-delete"></i></td></tr>');
 	}
 }
 

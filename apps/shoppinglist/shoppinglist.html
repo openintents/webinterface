@@ -4,16 +4,36 @@
 		<select id="shoppinglist-list">
 			
 		</select>
-		<table id="shoppinglist-list-manage" class="table-list hide">
-			<thead>
-				<th>Name</th>
-				<th>Action</th>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+		<div id="shoppinglist-list-manage-container" class="hide">
+			<div id="shoppinglist-list-add-container" class="hide">
+				<div class="modal-header">
+					<h3>Add List</h3>
+				</div>
+				<div class="modal-body well">
+					<label>List Name:
+					<input name="list-add-name" type="text" placeholder="List Name"></input>
+					</label>
+					<button class="btn" data-action="list-add-close">Close</button>
+					<button class="btn btn-primary" data-action="list-add-add">Add</button>
+				</div>
+			</div>
+			<div id="shoppinglist-list-btn-container">
+				<button id="shoppinglist-list-btn-add-item" class="btn" data-action="list-add-show">
+					<i class="icon-plus"></i>
+					Add List
+				</button>
+			</div>
+			<table id="shoppinglist-list-manage" class="table-list">
+				<thead>
+					<th>Name</th>
+					<th>Action</th>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
 		<br/><br/>
-		<div>
+		<div id="shoppinglist-btn-container">
 		  <button id="shoppinglist-btn-add-item" class="btn">
 		      <i class="icon-plus"></i>
 		      Add Item
