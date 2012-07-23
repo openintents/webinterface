@@ -194,6 +194,42 @@ html, body {
 	background-color: #1f1f1f;
 }
 
+#sidebar-toggle {
+	position: absolute;
+	left:0;
+	top: 50%;
+	z-index: 10;
+	width: 32px;
+	height: 32px;
+}
+
+#sidebar-toggle button {
+	background: url("../images/toggle.png");
+	background-size: 32px 32px;
+	width: 32px;
+	height: 32px;
+	display: block;
+	border: none;
+}
+
+#sidebar-toggle button {
+	text-decoration: none;
+}
+
+/* Rotate the button, saves us some space ;) */
+
+.sidebar-toggle-hide button {
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+	filter: FlipH;
+	-ms-filter: "FlipH";
+}
+
+.sidebar-toggle-show {
+	
+}
 
 /* Notification */
 

@@ -23,7 +23,7 @@ head.ready(function() {
 	
 	refreshUI();
 	
-	$('#menuToggleSidebar, #menuToggleSidebarMobile').click(function() {
+	$('#menuToggleSidebar, #menuToggleSidebarMobile, #sidebar-toggle button').click(function() {
 		toggleSidebar();
 	});
 	
@@ -309,12 +309,16 @@ function sidebar(action)
 {
 	if(action == 'hide') {
 		//$('#nav').removeClass('shown');
-		$('#nav').hide('slow', function() { resizeUI(); });
+		//$('#nav').hide('slow', function() { resizeUI(); });
+		// Animate sidebar
+		$('#nav').animate({left:-1000}, 1000, function() { $(this).hide(); resizeUI();});
 	}
 	else {
 		//$('#nav').addClass('shown');
 		resizeUI();
-		$('#nav').show('slow');
+		//$('#nav').show('slow');
+		$('#nav').show();
+		$('#nav').animate({left:0}, 1000);
 	}
 }
 
@@ -327,12 +331,14 @@ function resizeUI()
 		shown = true;
 		span = $('#content').attr('data-span-min');
 		margin = $('#content').attr('data-margin-min');
+		$('#sidebar-toggle').addClass('sidebar-toggle-hide');
 	}
 	else
 	{
 		shown = false;
 		span = $('#content').attr('data-span-max');
 		margin = $('#content').attr('data-margin-max');
+		$('#sidebar-toggle').removeClass('sidebar-toggle-hide');
 	}
 	
 	var classes = $('#content').attr('class');
