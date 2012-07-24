@@ -250,6 +250,7 @@ function refreshNotes()
 			
 			if(keys.length == 0) {
 				emptymsg = '<p id="notepad-empty">You don\'t have any notes yet! Click on the \'Add Note\' button above to add a new note!</p>';
+				$('#notepad-empty').remove(); // Prevents multiple messages from displaying
 				$('#content-notepad').append(emptymsg);
 			}
 			else {
