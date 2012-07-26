@@ -24,14 +24,18 @@ function initShoppingList() {
 	
 	// Fetch OI Notepad's HTML fragment and load it
 	$.get('apps/shoppinglist/shoppinglist.html', function(data) {
-	    $('#content').append(data);
-	    // TODO: This is just for testing
-	    insertList(1, 'My Shopping List');
-	    loadList(1); // TODO: Load the first list at start (Only for testing)
-	    insertList(-1, '&lt;Manage&gt;');
-	   // insertItem({id:1,priority:1,item:'Maggi',price:100,qty:1,units:'kg',tags:'food'});
-	   // insertItem({id:2,priority:2,item:'Chips',price:100,qty:1,units:'kg',tags:'food'});
+		$('#content').append(data);
+		// TODO: This is just for testing
+		insertList(1, 'My Shopping List');
+		loadList(1); // TODO: Load the first list at start (Only for testing)
+		insertList(-1, '&lt;Manage&gt;');
+	
+		//Initialize popovers
+		$('#content-shoppinglist .popover-focus').popover({
+			trigger: 'focus'
+		});
 	});
+
 }
 
 function setupShoppingListEvents() {
@@ -73,9 +77,13 @@ function setupShoppingListEvents() {
 		if(screen.width >= 979) {
 			console.log('Showing add-item dialog for desktop');
 			$('#modal-add-item').addClass('modal');
-			$('#modal-add-item').modal();
+			$('#modal-add-item').modal({
+				keyboard: false,
+				background: 'static'
+			});
 			$('#modal-add-item').on('hidden', function() {
 				$('#modal-add-item').removeClass('modal');
+				clearItemInput();
 			});
 		}
 		else {
@@ -83,6 +91,18 @@ function setupShoppingListEvents() {
 		}
 	});
 	
+	// Quick add item
+	$(document).on('submit', '#shoppinglist-form-quick-add-item', function() {
+		input = $(this).children('input[type=text]');
+		input.attr('disabled', 'disabled');
+		input.popover('hide');
+		name = input.val();
+		id = Math.floor(Math.random() * 1000);
+		insertItem({id:id, item:name});
+		input.val('');
+		input.removeAttr('disabled');
+		return false;
+	});
 	// Add item dialog event
 	$(document).on('click', '#btn-add-item', function() {
 		var prefix = '#add-item-'; // Just so if we change prefix it'll be easy to just change it here
@@ -128,21 +148,24 @@ function setupShoppingListEvents() {
 	});
 	
 	// Show Add List dialog
-	$(document).on('click', 'button[data-action=list-add-show]', function() {
+	/*$(document).on('click', 'button[data-action=list-add-show]', function() {
 			$('#shoppinglist-list-add-container').slideDown();
 	});
 	
 	// Close Add List dialog
 	$(document).on('click', 'button[data-action=list-add-close]', function() {
 			$('#shoppinglist-list-add-container').slideUp();
-	});
+	});*/
 	
 	// Add list
-	$(document).on('click', 'button[data-action=list-add-add]', function() {
-			name = $('input[name=list-add-name]').val();
+	$(document).on('submit', '#shoppinglist-form-add-list', function() {
+			$(this).children('button[type=submit]').button('loading');
+			name = $(this).children('input[type=text]').val();
+			$(this).children('input[type=text]').val('');
 			insertList(Math.floor(Math.random()*1000), name);
-			$('#shoppinglist-list-add-container').slideUp();
 			notify('New list added successfully!', 'alert-success');
+			$(this).children('button[type=submit]').button('reset');
+			return false;
 	});
 }
 
@@ -214,6 +237,21 @@ function insertList(id, name) {
 
 function insertItem(item)
 {
+	if(typeof item.id === "undefined")
+		item.id = "";
+	if(typeof item.priority === "undefined")
+		item.priority = "";
+	if(typeof item.item === "undefined")
+		item.item = "";
+	if(typeof item.price === "undefined")
+		item.price = "";
+	if(typeof item.qty === "undefined")
+		item.qty = "";
+	if(typeof item.units === "undefined")
+		item.units = "";
+	if(typeof item.tags === "undefined")
+		item.tags = "";
+	
 	append = '<tr id="item-'+item.id+'"><td><input type="checkbox"></input></td>'+
 		'<td>'+item.priority+'</td>'+
 		'<td>'+item.item+'</td>'+
@@ -249,4 +287,10 @@ function deleteItem(id)
 {
 	$('#item-'+id).fadeOut(function() { $(this).remove() });
 	$('#item-edit-'+id).remove();
+}
+
+// Clear the input boxes
+function clearItemInput()
+{
+	$('#modal-add-item input[type=text]').val('');
 }

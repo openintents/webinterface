@@ -30,6 +30,7 @@ head.ready(function() {
 	//Hide the loading screen
 	$('.lightbox_bg').hide();
 	$('#loading').hide();
+	
 });
 
 // Provides settings retrieving and saving via cookies

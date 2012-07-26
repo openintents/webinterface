@@ -270,7 +270,7 @@ html, body {
 	width: 100%;
 	text-align: left;
 	padding: 10px;
-	margin: 1em;
+	margin: 1em 1em 1em 0;
 }
 
 .table-list tr {
@@ -388,9 +388,9 @@ html, body {
 	border-bottom: 0;
 }
 
-#content .btn {
+/*#content .btn {
 	margin-left: 6px;
-}
+}*/
 
 
 /* Landscape phones and down */
