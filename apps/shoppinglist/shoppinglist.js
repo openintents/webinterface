@@ -29,7 +29,8 @@ function initShoppingList() {
 		insertList(1, 'My Shopping List');
 		loadList(1); // TODO: Load the first list at start (Only for testing)
 		insertList(-1, '&lt;Manage&gt;');
-	
+		
+		$('#shoppinglist-items').tablesorter();
 		//Initialize popovers
 		$('#content-shoppinglist .popover-focus').popover({
 			trigger: 'focus'
@@ -81,6 +82,7 @@ function setupShoppingListEvents() {
 				keyboard: false,
 				background: 'static'
 			});
+			$('#add-item-item').focus();
 			$('#modal-add-item').on('hidden', function() {
 				$('#modal-add-item').removeClass('modal');
 				clearItemInput();
@@ -274,7 +276,8 @@ function insertItem(item)
 		'<li><a id="item-action-cancel-'+item.id+'" href="#" title="Cancel"><i class="icon-remove item-action-cancel"></i></a></li>'+
 		'</ul></td></tr>';
 		
-	$('#shoppinglist-items tbody').append(append);	  
+	$('#shoppinglist-items tbody').append(append);	 
+	$('#shoppinglist-items').trigger('update');
 }
 
 function editItem(id)

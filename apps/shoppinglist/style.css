@@ -29,3 +29,7 @@
 #shoppinglist-items td, #shoppinglist-list-manage td {
 	padding: 0.4em;
 }
+
+#shoppinglist-form-quick-add-item {
+	margin-right: 10px;
+}

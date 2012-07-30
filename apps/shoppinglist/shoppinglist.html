@@ -23,14 +23,14 @@
 		</div>
 		<br/><br/>
 		<div id="shoppinglist-btn-container">
-			<form id="shoppinglist-form-quick-add-item" class="form-inline">
+			<form id="shoppinglist-form-quick-add-item" class="form-inline pull-left">
 				<input type="text" placeholder="Quick Add Item" class="popover-focus" data-content="Type an item name and press [ENTER] to quickly add it to the list" data-original-title="Quick Add"/>
 				<button type="submit" class="hide"></button>
-				<button id="shoppinglist-btn-add-item" class="btn">
+			</form>
+			<button id="shoppinglist-btn-add-item" class="btn">
 					<i class="icon-plus"></i>
 					Add Item
-				</button>
-			</form>
+			</button>
 		</div>
 		<div id="inline-add-item" class="hide">
 			<table>
@@ -47,15 +47,17 @@
 			<a href="#" id="inline-btn-add-item" class="btn btn-primary">Add</a>
 		</div>
 		
-		<table id="shoppinglist-items" class="table-list">
+		<table id="shoppinglist-items" class="table-list tablesorter">
 			<thead>
-			    <th></th>
-			    <th>Priority</th>
-			    <th>Item</th>
-			    <th>Price</th>
-			    <th>Qty/Units</th>
-			    <th>Tags</th>
-			    <th>Action</th>
+				<tr>
+				    <th></th>
+				    <th><a href="#">Priority</a></th>
+				    <th><a href="#">Item</a></th>
+				    <th><a href="#">Price</a></th>
+				    <th><a href="#">Qty/Units</a></th>
+				    <th><a href="#">Tags</a></th>
+				    <th><a href="#">Action</a></th>
+				</tr>
 			</thead>
 			<tbody>
 			</tbody>

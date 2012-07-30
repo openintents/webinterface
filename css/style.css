@@ -1,6 +1,16 @@
+/* Global Styles */
+
 html, body {
 	height: 100%;
 }
+
+a.disabled {
+	pointer-events: none;
+	cursor: default;
+	color: gray !important;
+}
+
+/* ID Styles */
 
 #header {
 	min-height: 3em;
@@ -194,6 +204,14 @@ html, body {
 	background-color: #1f1f1f;
 }
 
+#table-launchers tr {
+	border-bottom: 1px dotted #2E2E2E;
+}
+
+#table-launchers tr:last-child {
+	border-bottom: 0;
+}
+
 #sidebar-toggle {
 	position: absolute;
 	left:0;
@@ -210,8 +228,12 @@ html, body {
 	height: 32px;
 	display: block;
 	border: none;
+	opacity: 0.4;
 }
 
+#sidebar-toggle button:hover {
+	opacity: 1.0;
+}
 #sidebar-toggle button {
 	text-decoration: none;
 }
@@ -375,6 +397,9 @@ html, body {
 	float: left;
 }
 
+.btn-group .btn {
+	margin-right: 10px;
+}
 
 /* Override classes */
 
@@ -388,9 +413,9 @@ html, body {
 	border-bottom: 0;
 }
 
-/*#content .btn {
-	margin-left: 6px;
-}*/
+#content .btn {
+	margin-right: 10px;
+}
 
 
 /* Landscape phones and down */

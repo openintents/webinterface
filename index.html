@@ -14,7 +14,13 @@
 	<body>
 		<div class="lightbox_bg" style="display:block"></div>
 		<div id="loading" class="modal">
-			<h4>Loading....</h4>
+			<h3>Loading....</h3>
+			<noscript>
+				<p>You don't seem to have JavaScript enabled in your browser or you don't have a modern web browser!</p>
+				<p>Please either enable JavaScript or get a modern web browser like 
+				<a href="http://getfirefox.com/"><strong>Mozilla Firefox</strong></a> or 
+				<a href="http://google.com/chrome"><strong>Google Chrome</strong></a></p>
+			</noscript>
 			<div class="progress progress-striped active">
 				
 				<div class="bar" style="width:100%">
@@ -35,6 +41,7 @@
 							<ul class="dropdown-menu">
 								<li><a id="menuToggleSidebar" href="#">Toggle Sidebar</a></li>
 								<li><a id="showSettings" class="showSettings" href="#">Settings</a></li>
+								<li><a href="/">Logout</a></li>
 								<!--<li><a href="#">Help</a></li>
 								<li><a href="#">About</a></li>-->
 								<!--<li><a href="#" id="menuLogout">Logout</a></li>-->
@@ -129,6 +136,7 @@
 					"js/jquery.json-2.3.min.js",
 					"js/bootstrap.min.js",
 					"js/jquery.validate.min.js",
+					"js/jquery.tablesorter.min.js",
 					"js/scripts.js");
 			
 		</script>

@@ -19,6 +19,12 @@ function initNotepad()
 	// Fetch OI Notepad's HTML fragment and load it
 	$.get('apps/notepad/notepad.html', function(data) {
 	    $('#content').append(data);
+	    $('#content-notepad .table-list').tablesorter({
+	    	textExtraction: function(node) {
+	    		if($(node).hasClass('hide')) return "";
+	    		return $(node).children('a').text();
+	    	}
+	    });
 	});
 }
 
@@ -108,15 +114,30 @@ function setupNotepadEvents()
 		if(screen.width >= 979) { // Desktop
 			$('#add-note-modal').addClass('modal');
 			$('#add-note-modal').modal();
+			$('#add-note-modal').on('hidden', function() {
+				$('#add-note-modal').removeClass('modal');
+				$('#form-note-add input, #form-note-add textarea').val('');
+			});
+			$('#form-note-add input[name=title]').focus();
 		}
 		else { // Mobile
-			$('#modal-note-phone').show();
+			$('#add-note-phone').slideDown();
 		}
 	});
 	
 	// Toggle note selection
 	$(document).on('click', '#notepad-action-toggle', function() {
 		$('.note-select').toggle();
+		if($('.note-select').is(':visible')) {
+			$('#notepad-action-selectall').removeClass('disabled');
+			$('#notepad-action-deselectall').removeClass('disabled');
+			$('#notepad-action-deleteselected').removeClass('disabled');
+		}
+		else {
+			$('#notepad-action-selectall').addClass('disabled');
+			$('#notepad-action-deselectall').addClass('disabled');
+			$('#notepad-action-deleteselected').addClass('disabled');
+		}
 		// Deselect all notes
 		$('#content-notepad .table-list input:checkbox').attr('checked', false);
 	});
@@ -181,7 +202,7 @@ function setupNotepadEvents()
 	
 	$(document).on('click', '#btn-note-close-phone', function() {
 		$('#add-note-phone').slideUp();
-		
+		$('#form-note-add input, #form-note-add textarea').val('');
 	});
 }
 
@@ -227,6 +248,7 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 	note.append('</tr></td>');
 	
 	$('.table-hide #note-content-'+id).parent().append(table_hide_edit);
+	$('#content-notepad .table-list').trigger('update');
 }
 
 
@@ -239,10 +261,11 @@ function refreshNotes()
 		hideThrobber();
 		
 			
-			$('#content-notepad .table-list').remove();
-			$('#content-notepad').append('<table class="table-list">'+
+			$('#content-notepad .table-list tbody').html('');
+			//TODO: Remove the below line after testing
+			/*$('#content-notepad').append('<table class="table-list">'+
 									'<thead><th>Title</th></thead>'+
-									'<tbody></tbody></table>');
+									'<tbody></tbody></table>');*/
 			
 			
 			

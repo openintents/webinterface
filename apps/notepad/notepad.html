@@ -1,6 +1,6 @@
 <div id="content-notepad" style="display: none">
 		<div class="nav-content"><button class="btn" data-switch="home"><i class="icon-home"></i>&nbsp;Home</button></div>
-		<h3>OI Notepad notes</h3>
+		<h3>OI Notepad</h3>
 			<div class="btn-group btn-toolbar">
 				<div class="visible-desktop hide" id="add-note-modal">
 					<div class="modal-header">
@@ -10,9 +10,9 @@
 					<div class="modal-body well">
 						<form id="form-note-add">
 							<label of="title" class="control-label">Title</label>
-							<input type="text" name="title" class="required input-xlarge"/>
+							<input type="text" name="title" class="required input-xlarge" placeholder="Title"/>
 							<label of="note" class="control-label">Text</label>
-							<textarea name="note" class="required input-xlarge"></textarea>
+							<textarea name="note" class="required input-xlarge" placeholder="Text"></textarea>
 						</form>
 					</div>
 					<div class="modal-footer">
@@ -33,9 +33,9 @@
 						</button>
 						<ul class="dropdown-menu">
 							<li><a id="notepad-action-toggle" href="#">Toggle Selection</a></li>
-							<li><a id="notepad-action-selectall" href="#">Select All</a></li>
-							<li><a id="notepad-action-deselectall" href="#">Deselect All</a></li>
-							<li><a id="notepad-action-deleteselected" href="#">Delete Selected</a></li>
+							<li><a id="notepad-action-selectall" href="#" class="disabled">Select All</a></li>
+							<li><a id="notepad-action-deselectall" href="#" class="disabled">Deselect All</a></li>
+							<li><a id="notepad-action-deleteselected" href="#" class="disabled">Delete Selected</a></li>
 						</ul>
 					<!--<button class="button-note-delete button-delete btn"><i class="icon-remove"></i>Delete</button>-->
 					</div> <!-- .btn-group -->
@@ -43,18 +43,21 @@
 						<div class="well">
 							<form id="form-note-add">
 								<label of="title" class="control-label">Title</label>
-								<input type="text" name="title" class="input-xlarge"/>
+								<input type="text" name="title" class="input-xlarge" placeholder="Title"/>
 								<label of="text" class="control-label">Text</label>
-								<textarea name="text" class="input-xlarge"></textarea>
+								<textarea name="text" class="input-xlarge" placeholder="Text"></textarea>
 							</form>
 							<a id="btn-note-close-phone" href="#" class="btn push-left">Close</a>
 							<a id="btn-note-add" href="#" class="btn btn-primary push-left">Add</a>
 						</div>
 					</div>
 					</div>
-					<table class="table-list hide">
+					<table class="table-list tablesorter">
 						<thead>
-							<th>Title</th>
+							<tr>
+								<th class="hide"></th>
+								<th><a href="#">Title</a></th>
+							</tr>
 						</thead>
 						<tbody>
 							
