@@ -152,9 +152,14 @@ function setupEvents() {
 	
 	// Show mobile-friendly version of the settings dialog
 	$('#showSettingsMobile').click(function() {
-		$('#settings').removeClass('modal');
-		$('#settings').slideDown();
-		$('#settingsClose').click(function() { $('#settings').slideUp(); $(this).off(); });
+		if($('#settings').is(':visible')) {
+			$('#settings').slideUp();
+		}
+		else {
+			$('#settings').removeClass('modal');
+			$('#settings').slideDown();
+			$('#settingsClose').click(function() { $('#settings').slideUp(); $(this).off(); });
+		}
 	});
 	
 	$('#settingsSave').click(function() {

@@ -31,6 +31,7 @@ function initShoppingList() {
 		insertList(-1, '&lt;Manage&gt;');
 		
 		$('#shoppinglist-items').tablesorter();
+		
 		//Initialize popovers
 		$('#content-shoppinglist .popover-focus').popover({
 			trigger: 'focus'
@@ -72,21 +73,26 @@ function setupShoppingListEvents() {
 		return false;
 	});
 	
+	$(document).on('hidden', '#modal-add-item', function() {
+		$('#modal-add-item').removeClass('modal');
+		$('#modal-add-item #btn-add-item').show();
+		$('#modal-add-item #btn-update-item').hide();
+		clearItemInput();
+	});
+	
 	// Add item event
 	$(document).on('click', '#shoppinglist-btn-add-item', function() {
 		//console.log(screen.width);
+		
 		if(screen.width >= 979) {
-			console.log('Showing add-item dialog for desktop');
 			$('#modal-add-item').addClass('modal');
 			$('#modal-add-item').modal({
 				keyboard: false,
 				background: 'static'
 			});
 			$('#add-item-item').focus();
-			$('#modal-add-item').on('hidden', function() {
-				$('#modal-add-item').removeClass('modal');
-				clearItemInput();
-			});
+			$('#btn-add-item').show();
+			$('#btn-update-item').hide();
 		}
 		else {
 			$('#inline-add-item').slideDown();
@@ -105,6 +111,7 @@ function setupShoppingListEvents() {
 		input.removeAttr('disabled');
 		return false;
 	});
+	
 	// Add item dialog event
 	$(document).on('click', '#btn-add-item', function() {
 		var prefix = '#add-item-'; // Just so if we change prefix it'll be easy to just change it here
@@ -136,7 +143,7 @@ function setupShoppingListEvents() {
 		
 		if(val == -1) {
 			//console.log('Manage list');
-			$('#shoppinglist-items').fadeOut(function() {
+			$('#shoppinglist-items-wrap').fadeOut(function() {
 				$('#shoppinglist-btn-container').fadeOut();
 				$('#shoppinglist-list-manage-container').slideDown();
 			});
@@ -145,8 +152,13 @@ function setupShoppingListEvents() {
 			//console.log('Loading list '+val);
 			loadList(val);	
 		}
-		
-		
+	});
+	
+	// Sort helper for checked items
+	$(document).on('change', '#shoppinglist-items input[type=checkbox]', function(e) {
+			var checked = (this.checked)?1:0;
+			$($(this).parent().children('span')[0]).html(checked);
+			$('#shoppinglist-items').trigger('update');
 	});
 	
 	// Show Add List dialog
@@ -195,7 +207,7 @@ function shoppingListSwitched() {
 function loadList(id) {
 	items = getList(id);
 	$('#shoppinglist-list-manage-container').slideUp(function() {
-		$('#shoppinglist-items').fadeIn();
+		$('#shoppinglist-items-wrap').fadeIn();
 		$('#shoppinglist-btn-container').fadeIn();
 	});
 	
@@ -239,6 +251,8 @@ function insertList(id, name) {
 
 function insertItem(item)
 {
+	if(typeof item.checked === "undefined")
+		item.checked = 0;
 	if(typeof item.id === "undefined")
 		item.id = "";
 	if(typeof item.priority === "undefined")
@@ -254,12 +268,12 @@ function insertItem(item)
 	if(typeof item.tags === "undefined")
 		item.tags = "";
 	
-	append = '<tr id="item-'+item.id+'"><td><input type="checkbox"></input></td>'+
-		'<td>'+item.priority+'</td>'+
-		'<td>'+item.item+'</td>'+
-		'<td>'+item.price+'</td>'+
-		'<td>'+item.qty+'&nbsp;'+item.units+'</td>'+
-		'<td>'+item.tags+'</td>'+
+	append = '<tr id="item-'+item.id+'"><td><span id="item-checked-'+item.id+'" class="hide">'+item.checked+'</span><input type="checkbox"></input></td>'+
+		'<td id="item-priority-'+item.id+'">'+item.priority+'</td>'+
+		'<td id="item-item-'+item.id+'">'+item.item+'</td>'+
+		'<td id="item-price-'+item.id+'">'+item.price+'</td>'+
+		'<td><span id="item-qty-'+item.id+'">'+item.qty+'</span>&nbsp;<span id="item-units-'+item.id+'">'+item.units+'</span></td>'+
+		'<td id="item-tags-'+item.id+'">'+item.tags+'</td>'+
 		'<td><ul class="list-inline">'+
 		'<li><a id="item-action-edit-'+item.id+'" href="#" title="Edit" class="item-action-edit"><i class="icon-pencil item-action-edit"></i></a></li>'+
 		'<li><a id="item-action-delete-'+item.id+'" href="#" title="Delete" class="item-action-delete"><i class="icon-remove item-action-delete"></i></a></li>'+
@@ -282,8 +296,47 @@ function insertItem(item)
 
 function editItem(id)
 {
-	$('#item-'+id).fadeOut();
-	$('#item-edit-'+id).fadeIn();
+	/*$('#item-'+id).fadeOut();
+	$('#item-edit-'+id).fadeIn();*/
+	
+	item = getItem(id);
+	
+	if(screen.width >= 979) {
+		container = '#add-item-';
+		$('#modal-add-item').addClass('modal');
+		$('#modal-add-item').modal('show');
+		$('#modal-add-item #btn-add-item').hide();
+		$('#modal-add-item #btn-update-item').show();
+	}
+	else {
+		container = '#inline-add-item-';
+		$('#inline-add-item').slideDown();
+		$('#inline-btn-add-item').hide();
+		$('#inline-btn-update-item').show();
+	}
+	
+	$(container+'id').val(id);
+	$(container+'item').val(item.item);
+	$(container+'priority').val(item.priority);
+	$(container+'price').val(item.price);
+	$(container+'qty').val(item.qty);
+	$(container+'units').val(item.units);
+	$(container+'tags').val(item.tags);
+}
+
+function getItem(id) 
+{
+	item = {};
+	item.id = id;
+	item.item = $('#item-item-'+id).text();
+	item.checked = $('#item-checked-'+id).text();
+	item.priority = $('#item-priority-'+id).text();
+	item.price = $('#item-price-'+id).text();
+	item.qty = $('#item-qty-'+id).text();
+	item.units = $('#item-units-'+id).text();
+	item.tags = $('#item-tags-'+id).text();
+	
+	return item; 
 }
 
 function deleteItem(id)

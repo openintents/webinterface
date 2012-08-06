@@ -265,7 +265,6 @@ a.disabled {
 	left: 50%;
 }
 
-
 /* Classes */
 
 .left {
@@ -299,9 +298,20 @@ a.disabled {
 	border-bottom: 2px solid #0d0d0d;
 }
 
-.table-list a {
+.table-list td a {
 	display: block;
 	padding: 10px;
+}
+
+#shoppinglist-items-table-wrap {
+	max-height: 25em;
+	overflow-y: auto;
+	margin-top: 1em;
+}
+
+#shoppinglist-items .priority, #shoppinglist-items .qty, #shoppinglist-items .completed,
+#shoppinglist-items .price {
+	max-width: 1.8em;
 }
 
 .table-hide {
