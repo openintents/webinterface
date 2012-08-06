@@ -151,7 +151,7 @@ function setupEvents() {
 	});
 	
 	// Show mobile-friendly version of the settings dialog
-	$('#showSettingsMobile').click(function() {
+	$('.showSettingsMobile').click(function() {
 		if($('#settings').is(':visible')) {
 			$('#settings').slideUp();
 		}
@@ -381,7 +381,7 @@ SERVER = window.location.host;
 //URL = "http://"+SERVER+"/server-pdo/index.php";
 URL = SERVER;
 
-// Disable AJAX caching, it leads to problems on webkit browsers
+// Disable AJAX caching, since it leads to problems on webkit browsers
 $.ajaxSetup({
 	cache: false,
 	error: function error(jqXHR, textStatus, errorThrown) 	{

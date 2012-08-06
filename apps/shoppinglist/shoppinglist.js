@@ -36,6 +36,8 @@ function initShoppingList() {
 		$('#content-shoppinglist .popover-focus').popover({
 			trigger: 'focus'
 		});
+		
+		touchScroll('shoppinglist-items-table-wrap');
 	});
 
 }
@@ -301,7 +303,8 @@ function editItem(id)
 	
 	item = getItem(id);
 	
-	if(screen.width >= 979) {
+	if(screen.width >= 979 || window.screen.availWidth >= 979) {
+		console.log(window.screen.availWidth);
 		container = '#add-item-';
 		$('#modal-add-item').addClass('modal');
 		$('#modal-add-item').modal('show');
@@ -349,4 +352,30 @@ function deleteItem(id)
 function clearItemInput()
 {
 	$('#modal-add-item input[type=text]').val('');
+}
+
+function isTouchDevice(){
+	try{
+		document.createEvent("TouchEvent");
+		return true;
+	}catch(e){
+		return false;
+	}
+}
+
+function touchScroll(id){
+	if(isTouchDevice()){ //if touch events exist...
+		var el=document.getElementById(id);
+		var scrollStartPos=0;
+
+		document.getElementById(id).addEventListener("touchstart", function(event) {
+			scrollStartPos=this.scrollTop+event.touches[0].pageY;
+			event.preventDefault();
+		},false);
+
+		document.getElementById(id).addEventListener("touchmove", function(event) {
+			this.scrollTop=scrollStartPos-event.touches[0].pageY;
+			event.preventDefault();
+		},false);
+	}
 }

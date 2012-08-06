@@ -11,6 +11,21 @@
 	width: 4em;
 }
 
+#shoppinglist-items-wrap {
+	position: relative;
+}
+
+#shoppinglist-items-table-wrap {
+	max-height: 25em;
+	overflow-y: auto;
+	margin-top: 1em;
+}
+
+#shoppinglist-items .priority, #shoppinglist-items .qty, #shoppinglist-items .completed,
+#shoppinglist-items .price {
+	max-width: 1.8em;
+}
+
 #shoppinglist-items a, #shoppinglist-list-manage a{
 	display: inline;
 }
@@ -28,6 +43,12 @@
 
 #shoppinglist-items td, #shoppinglist-list-manage td {
 	padding: 0.4em;
+}
+
+#shoppinglist-form-quick-add-wrap {
+	position: absolute;
+	z-index: 10;
+	left: 50%;
 }
 
 #shoppinglist-form-quick-add-item {

@@ -303,17 +303,6 @@ a.disabled {
 	padding: 10px;
 }
 
-#shoppinglist-items-table-wrap {
-	max-height: 25em;
-	overflow-y: auto;
-	margin-top: 1em;
-}
-
-#shoppinglist-items .priority, #shoppinglist-items .qty, #shoppinglist-items .completed,
-#shoppinglist-items .price {
-	max-width: 1.8em;
-}
-
 .table-hide {
 	border-radius: 5px;
 	padding: 20px;

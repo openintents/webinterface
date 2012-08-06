@@ -56,7 +56,7 @@
 							<div class="nav-collapse">
 								<ul>
 									<li class="hidden-phone"><a id="menuToggleSidebarMobile" href="#">Toggle Sidebar</a></li>
-									<li><a id="showSettingsMobile" href="#">Settings</a></li>
+									<li><a id="showSettingsMobile" class="showSettingsMobile" href="#">Settings</a></li>
 									<!--<li><a href="#">Help</a></li>
 									<li><a href="#">About</a></li>-->
 								</ul>
@@ -106,7 +106,10 @@
 					<p>To get started just click on the application name below.</p>
 					<div id="table-launchers-wrap">
 						<span id="table-launchers-edit">
-							<a href="#" class="showSettings" title="Edit">
+							<a href="#" class="showSettings hidden-phone" title="Edit">
+								<i class="icon-pencil"></i>
+							</a>
+							<a href="#" class="showSettingsMobile visible-phone" title="Edit">
 								<i class="icon-pencil"></i>
 							</a>
 						</span>
