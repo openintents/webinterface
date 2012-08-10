@@ -3,6 +3,19 @@ APPS = { notepad : {name : 'notepad', title : 'OI Notepad'},
 	 shoppinglist : { name : 'shoppinglist', title : 'OI Shopping List'}
 };
 
+
+//Disable AJAX caching, since it leads to problems on webkit browsers
+$.ajaxSetup({
+	cache: false,
+});
+
+$(document).ajaxError(function(xhr, evt, settings) {
+	if(settings.suppressErrors)
+		return;
+	hideThrobber();
+	notify('Error performing operation', 'alert-error'); 
+});
+
 loadScripts();
 
 head.ready(function() {
@@ -369,6 +382,52 @@ function hideThrobber()
 	$('#throbber').remove();
 }
 
+/*
+ * Converts the given container to inline by adding classes defined 
+ * in the custom attribute 'data-inline-class'
+ * NOTE: It does not alter the visibility of the container
+ */
+function convertToInline(container)
+{
+	$(container).removeClass('modal');
+	items = $(container+' [data-inline-class]');
+	$.each(items, function(i, v) {
+		$(v).removeClass($(v).attr('data-modal-class'))
+		$(v).addClass($(v).attr('data-inline-class'));
+	});
+}
+
+
+/*
+ * Converts the given container to modal by adding classes defined 
+ * in the custom attribute 'data-modal-class'
+ * NOTE: It does not alter the visibility of the container
+ */
+
+function convertToModal(container)
+{
+	$(container).addClass('modal');
+	items = $(container+' [data-modal-class]');
+	$.each(items, function(i, v) {
+		$(v).removeClass($(v).attr('data-inline-class'));
+		$(v).addClass($(v).attr('data-modal-class'));
+	});
+}
+
+//Clear the input boxes
+function clearInput(parent)
+{
+	$(parent+' input[type=text], '+parent+' input[type=hidden]').val('');
+}
+
+
+//Get ID
+function getID(id) {
+	id = id.split('-');
+	id = id[id.length-1];
+	return id;
+}
+
 /* 
  * 
  * AJAX Methods
@@ -381,18 +440,31 @@ SERVER = window.location.host;
 //URL = "http://"+SERVER+"/server-pdo/index.php";
 URL = SERVER;
 
-// Disable AJAX caching, since it leads to problems on webkit browsers
-$.ajaxSetup({
-	cache: false,
-	error: function error(jqXHR, textStatus, errorThrown) 	{
-		hideThrobber();
-		notify('Error performing operation: '+textStatus, 'alert-error'); 
-	}
-});
-
 function logout()
 {
 	$.getJSON(URL+'/logout', function(data) {
 		window.location.reload(true);
 	});
+}
+
+/*
+ * Test a REST call. Used for testing if an app is installed on the device or not
+ * Returns true on success or false on error
+ */
+function testCall(call)
+{
+	var ret;
+	jQuery.ajaxSetup({async:false});
+	$.ajax(call,
+			{suppressErrors : true}
+	)
+	.success(function(data) {
+		ret = true;
+	})
+	.error(function(xhr, status, error) {
+		if(xhr.status == 501)
+			ret = false;
+	});
+	jQuery.ajaxSetup({async:true});
+	return ret;
 }

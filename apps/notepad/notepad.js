@@ -13,6 +13,8 @@ $(document).on('notepad-switched', function() { notepadSwitched() });
 function initNotepad()
 {
 	console.log('Init notepad');
+	if(!testCall("/notes/get"))
+		return;
 	// Add application to the UI
 	addApplication({'name' : 'notepad', 'title' : 'OI Notepad', 'icon-small' : 'images/oi-notepad.png', 'icon-big' : 'images/ic_launcher_notepad.png' });
 	
@@ -24,6 +26,9 @@ function initNotepad()
 	    		if($(node).hasClass('hide')) return "";
 	    		return $(node).children('a').text();
 	    	}
+	    });
+	    $('#form-note-add').validate({
+	    	onfocusout: false
 	    });
 	});
 }
@@ -77,7 +82,7 @@ function setupNotepadEvents()
 		
 	});
 	
-	// Event the delete button is clicked
+	// Event when the delete button is clicked
 	$(document).on('click', '.button-note-delete', function() {
 		var parent = $(this).parent();
 		var id = parent.attr('id');
@@ -109,20 +114,27 @@ function setupNotepadEvents()
 		$('#delete-confirm-modal-'+id).modal();
 	});
 	
-	// Event when the add note button is clicked
+	$(document).on('click', '#btn-note-close', function() {
+		closeAddNoteDialog();
+	});
+	
+	// Event when the new note button is clicked
 	$(document).on('click', '.button-note-add', function() {
 		if(screen.width >= 979) { // Desktop
-			$('#add-note-modal').addClass('modal');
+			convertToModal('#add-note-modal');
+			//$('#add-note-modal').addClass('modal');
 			$('#add-note-modal').modal();
 			$('#add-note-modal').on('hidden', function() {
-				$('#add-note-modal').removeClass('modal');
-				$('#form-note-add input, #form-note-add textarea').val('');
+				//$('#add-note-modal').removeClass('modal');
+				//$('#form-note-add input, #form-note-add textarea').val('');
+				clearInput('#form-note-add');
 			});
-			$('#form-note-add input[name=title]').focus();
 		}
 		else { // Mobile
-			$('#add-note-phone').slideDown();
+			convertToInline('#add-note-modal');
+			$('#add-note-modal').slideDown();
 		}
+		$('#form-note-add input[name=title]').focus();
 	});
 	
 	// Toggle note selection
@@ -187,17 +199,19 @@ function setupNotepadEvents()
 		$('#delete-confirm-modal-all').modal();
 	});
 	
-	$(document).on('click', '#btn-note-add', function() {
-		$.validator.setDefaults({
+	$(document).on('submit', '#form-note-add', function() {
+		/*$.validator.setDefaults({
 			showError: function(errorMap, errorList) { },
 		});
 		
 		if(!$('#form-note-add').valid()) {
 			return;
-		}
+		}*/
 		//notify('Saving note....', 'alert-info');
 		addNewNote('#form-note-add');
-		$('#add-note-modal').modal('hide');
+		//$('#add-note-modal').modal('hide');
+		closeAddNoteDialog();
+		return false;
 	});
 	
 	$(document).on('click', '#btn-note-close-phone', function() {
@@ -251,6 +265,15 @@ function insertNote(id, title, text, createdDate, modifiedDate)
 	$('#content-notepad .table-list').trigger('update');
 }
 
+function closeAddNoteDialog()
+{
+	$('#add-note-modal').modal('hide');
+	$('#add-note-modal').slideUp();
+	clearInput('#form-note-add');
+	// Remove error messages
+	$('#form-note-add input, #form-note-add textarea').removeClass('error');
+	$('#form-note-add label.error').remove();
+}
 
 function refreshNotes()
 {

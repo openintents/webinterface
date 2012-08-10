@@ -11,11 +11,15 @@
 	width: 4em;
 }
 
-#shoppinglist-items-wrap {
+.inline-header {
+	margin-top: 1em;
+}
+
+#shoppinglist-items-wrap, .fixed-height-table-wrap {
 	position: relative;
 }
 
-#shoppinglist-items-table-wrap {
+#shoppinglist-items-table-wrap, .fixed-height-table-wrap {
 	max-height: 25em;
 	overflow-y: auto;
 	margin-top: 1em;
@@ -45,12 +49,12 @@
 	padding: 0.4em;
 }
 
-#shoppinglist-form-quick-add-wrap {
+#shoppinglist-form-quick-add-wrap, .quick-add {
 	position: absolute;
 	z-index: 10;
 	left: 50%;
 }
 
-#shoppinglist-form-quick-add-item {
+#shoppinglist-form-quick-add-item, .quick-add {
 	margin-right: 10px;
 }

@@ -5,51 +5,92 @@
 			
 		</select>
 		<div id="shoppinglist-list-manage-container" class="hide">
-			<form id="shoppinglist-form-add-list" action="" class="form-inline">
-				<input type="text" placeholder="List Name"/>
-				<button id="shoppinglist-list-btn-add-item" class="btn" data-loading-text="Adding..." type="submit">
-					<i class="icon-plus"></i>
-					Add List
-				</button>
-			</form>
-			<table id="shoppinglist-list-manage" class="table-list">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
-		<br/><br/>
-		<div id="shoppinglist-btn-container">
-			<button id="shoppinglist-btn-add-item" class="btn">
-					<i class="icon-plus"></i>
-					Add Item
+			<div id="sl-dialog-new-list" class="hide">
+				<div class="modal-header" data-modal-class="modal-header" data-inline-class="inline-header">
+					<button type="button" class="close hidden-phone" data-dismiss="modal">×</button>
+					<h3>New list</h3>
+				</div>
+				<form id="sl-form-new-list">
+					<div class="modal-body well" data-modal-class="modal-body well" data-inline-class="">
+						<label>List Name:<input type="text" name="name" placeholder="List Name" class="required"/></label>
+						<input type="hidden" name="id"/>
+					</div>
+					<div class="modal-footer" data-modal-class="modal-footer" data-inline-class="">
+						<a id="sl-form-new-list-close" class="btn" data-dismiss="modal">Close</a>
+						<button name="btn-add" type="submit" class="btn btn-primary" data-action="create">Add</button>
+					</div>
+				</form>
+			</div> <!--  .shoppinglist-list-manage-container -->
+			<button id="sl-btn-new-list" class="btn" data-loading-text="Adding..." type="submit">
+				<i class="icon-plus"></i>
+				New List
 			</button>
-		</div>
-		<div id="inline-add-item" class="hide">
-			<form id="form-inline-add-item">
-				<table>
+			<div class="fixed-table-wrap">
+				<table id="shoppinglist-list-manage" class="table-list">
+					<thead>
+						<tr>
+							<th><a href="#">Name</a></th>
+							<th><a href="#">Action</a></th>
+						</tr>
+					</thead>
 					<tbody>
-						<tr><td><label>Name: <input id="inline-add-item-item" type="text" placeholder="Item"/></label></td></tr>
-						<tr><td><label>Priority: <input id="inline-add-item-priority" type="text" placeholder="Priority"/></label></td></tr>
-						<tr><td><label>Price:<input id="inline-add-item-price" type="text" placeholder="Price"/></label></td></tr>
-						<tr><td><label>Quantity:<input id="inline-add-item-qty" type="text" placeholder="Quantity"/></label></td>
-						<td><label>Units:<input id="inline-add-item-units" type="text" placeholder="Units"/></label></td></tr>
-						<tr><td><label>Tags:<input id="inline-add-item-tags" type="text" placeholder="Tags"/></label></td></tr>
 					</tbody>
 				</table>
-				<a href="#" id="inline-btn-cancel" class="btn" data-dismiss="modal">Cancel</a>
-				<button id="inline-btn-add-item" class="btn btn-primary">Add</button>
-				<button id="inline-btn-update-item" class="btn btn-primary">Update</button>
-				<input type="hidden" id="inline-add-item-id"/>
-			</form>
+			</div>
 		</div>
-		
+		<br/><br/>
 		<div id="shoppinglist-items-wrap">
+			<div id="shoppinglist-btn-container">
+				<button id="shoppinglist-btn-add-item" class="btn">
+						<i class="icon-plus"></i>
+						Add Item
+				</button>
+			</div>
+			<!-- <div id="inline-add-item" class="hide">
+				<form id="form-inline-add-item">
+					<table>
+						<tbody>
+							<tr><td><label>Name: <input id="inline-add-item-name" type="text" placeholder="Item"/></label></td></tr>
+							<tr><td><label>Priority: <input id="inline-add-item-priority" type="text" placeholder="Priority"/></label></td></tr>
+							<tr><td><label>Price:<input id="inline-add-item-price" type="text" placeholder="Price"/></label></td></tr>
+							<tr><td><label>Quantity:<input id="inline-add-item-quantity" type="text" placeholder="Quantity"/></label></td>
+							<td><label>Units:<input id="inline-add-item-units" type="text" placeholder="Units"/></label></td></tr>
+							<tr><td><label>Tags:<input id="inline-add-item-tags" type="text" placeholder="Tags"/></label></td></tr>
+						</tbody>
+					</table>
+					<a href="#" id="inline-btn-cancel" class="btn" data-dismiss="modal">Cancel</a>
+					<button id="inline-btn-add-item" class="btn btn-primary">Add</button>
+					<button id="inline-btn-update-item" class="btn btn-primary">Update</button>
+					<input type="hidden" id="inline-add-item-id"/>
+				</form>
+			</div> -->
+			<div id="modal-add-item" class="hide">
+				<div class="modal-header" data-modal-class="modal-header" data-inline-class="inline-header">
+					<button type="button" class="close hidden-phone" data-dismiss="modal">×</button>
+					<h3>Add new item</h3>
+				</div>
+				<form id="form-modal-add-item" action="">
+				<div class="modal-body well" data-modal-class="modal-body well" data-inline-class="">
+					<table>
+						<tbody>
+							<tr><td><label>Name: <input id="add-item-name" name="item_name" type="text" placeholder="Item" class="required"/></label></td></tr>
+							<tr><td><label>Priority: <input id="add-item-priority" type="text" name="priority" placeholder="Priority" class="number"/></label></td></tr>
+							<tr><td><label>Price:<input id="add-item-price" type="text" name="item_price" placeholder="Price" class="number"/></label></td></tr>
+							<tr><td><label>Quantity:<input id="add-item-quantity" type="text" name="quantity" placeholder="Quantity" class="number"/></label></td>
+							<td><label>Units:<input id="add-item-units" type="text" name="item_units" placeholder="Units"/></label></td></tr>
+							<tr><td><label>Tags:<input id="add-item-tags" type="text" name="item_tags" placeholder="Tags"/></label></td></tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer" data-modal-class="modal-footer" data-inline-class="">
+					<a href="#" class="btn" id="form-modal-add-item-btn-close" data-dismiss="modal">Close</a>
+					<button type="submit" id="btn-add-item" class="btn btn-primary" autocomplete="off" data-loading-text="Adding...">Add</button>
+					<input type="hidden" id="add-item-id" name="item_id"/>
+					<input type="hidden" id="add-item-list-id" name="list_id"/>
+					<button id="btn-update-item" type="submit" class="btn btn-primary hide" autocomplete="off" data-loading-text="Updating...">Update</button>
+				</div>
+				</form>
+			</div> <!--  #moda-add-item -->
 			<div id="shoppinglist-items-table-wrap">
 				<table id="shoppinglist-items" class="table-list tablesorter">
 					<thead>
@@ -69,37 +110,9 @@
 			</div> <!-- #shoppinglist-items-table-wrap -->
 			
 			<form id="shoppinglist-form-quick-add-item" class="form-inline pull-left">
-				<input type="text" placeholder="Quick Add Item" class="popover-focus" data-content="Type an item name and press [ENTER] to quickly add it to the list" data-original-title="Quick Add"/>
+				<input type="text" placeholder="Quick Add Item" class="popover-focus required" data-content="Type an item name and press [ENTER] to quickly add it to the list" data-original-title="Quick Add"/>
 				<button type="submit" class="hide"></button>
 			</form>
 		</div>
 		
-		<div id="modal-add-item" class="hide">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">×</button>
-				<h3>Add new item</h3>
-			</div>
-			<form id="form-modal-add-item" action="">
-			<div class="modal-body well">
-				<table>
-					<tbody>
-						<tr><td><label>Name: <input id="add-item-item" type="text" placeholder="Item"/></label></td></tr>
-						<tr><td><label>Priority: <input id="add-item-priority" type="text" placeholder="Priority"/></label></td></tr>
-						<tr><td><label>Price:<input id="add-item-price" type="text" placeholder="Price"/></label></td></tr>
-						<tr><td><label>Quantity:<input id="add-item-qty" type="text" placeholder="Quantity"/></label></td>
-						<td><label>Units:<input id="add-item-units" type="text" placeholder="Units"/></label></td></tr>
-						<tr><td><label>Tags:<input id="add-item-tags" type="text" placeholder="Tags"/></label></td></tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="modal-footer">
-				<a href="#" class="btn" data-dismiss="modal">Cancel</a>
-				<button type="submit" id="btn-add-item" class="btn btn-primary" autocomplete="off" data-loading-text="Adding...">Add</button>
-				<input type="hidden" id="add-item-id"/>
-				<button type="submit" id="btn-update-item" class="btn btn-primary hide" autocomplete="off" data-loading-text="Updating...">Update</button>
-			</div>
-			</form>
-		</div>
-						
-				
 </div> <!-- #content-shoppinglist -->
