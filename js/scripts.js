@@ -4,7 +4,7 @@ APPS = { notepad : {name : 'notepad', title : 'OI Notepad'},
 };
 
 
-//Disable AJAX caching, since it leads to problems on webkit browsers
+// Disable AJAX caching, since it leads to problems on webkit browsers
 $.ajaxSetup({
 	cache: false,
 });
@@ -135,25 +135,12 @@ function addScript(url){
 
 
 function setupUI() {
-	
-	/*$('.active').show();
-	$('#nav-home').parent().addClass('active'); // Set home as the default active link*/
-	
-	/*var navcontent = '<div class="nav-content"><button class="btn" data-switch="home">&larr; Back</button></div>';
-	
-	$('div').filter(function() {*/
-	//      return this.id.match(/^content-[^home].*/ig);
-	//).prepend(navcontent);
-	
 	$(document.body).trigger('setupUI');
-    
 }
 
 function setupEvents() {
 	
 	$(document).on('click', 'a[data-switch], button[data-switch]', function(event) {
-		//var id = $(this).attr('data-switch').split('-');
-		//switchTo(id[1]);
 		switchTo($(this).attr('data-switch'));
 	});
 	
@@ -181,8 +168,6 @@ function setupEvents() {
 		    array[value['name']] = $('#settingShow-'+value['name']).is(':checked')
 		});
 		
-		//array = {'notepad' : $('#settingShow-notepad').is(':checked'), 
-		//		'shoppinglist' : $('#settingShowShoppingList').is(':checked')};
 		Settings.set('showApps', array);
 		theme = $('#settingThemeSelect option').filter(':selected').text().toLowerCase();
 		Settings.set('theme', theme);
@@ -217,19 +202,12 @@ function refreshUI() {
 	$('link[data-theme=theme]').attr('href', 'themes/'+set['theme']+'/theme.css');
 	$('link[data-theme=bootstrap]').attr('href', 'themes/'+set['theme']+'/bootstrap.min.css');
 	
-	/*theme = '<link rel="stylesheet" href="themes/'+set['theme']+'/theme.css" media="screen"/>';
-	$('head').append(theme);*/
-	
-	/*$('#settingShowNotepad').attr('checked', set['showApps']['notepad']);
-	$('#settingShowShoppingList').attr('checked', set['showApps']['shoppinglist']);*/
-	
 	$.each(APPS, function(index, value) {
 	    $('#settingShow-'+value['name']).attr('checked', set['showApps'][value['name']]);
 	});
 	
 	$(document.body).trigger('refreshUI', [set]);
 	
-	//$('#content').css('margin-left','25%');
 	resizeUI();
 }
 
@@ -253,7 +231,6 @@ function switchTo(id) {
 	
 	// Call trigger for the app that has been switched to
 	$(document.body).trigger(id+'-switched');
-	//if(id == 'notepad') { refreshNotes(); }
 }
 
 function addApplication(app) {
@@ -267,6 +244,16 @@ function addApplication(app) {
 function removeActiveClass() {
 	$('.nav-active').removeClass('nav-active');
 }
+
+/*
+ * Displays a small notification on the top of the screen
+ * 
+ * @method notify
+ * @param {String} text Text to display
+ * @param {String} type A class to apply to the notification like 'alert-info', 'alert-success', 'alert-error' etc. Defaults to 'alert-info'
+ * @param {Boolean} persist Whether to persist the notification or hide it after some time
+ * @param {String} container Container where to place the notification
+ */
 
 function notify(text, type, persist, container)
 {
@@ -307,6 +294,12 @@ function hideMenu()
 	return true;
 }
 
+/*
+ * Toggles sidebar. Calls refreshUI when done
+ * 
+ * @method toggleSidebar
+ */
+
 function toggleSidebar()
 {
 	var classes = $('#nav').attr('class');
@@ -324,18 +317,20 @@ function toggleSidebar()
 	refreshUI();
 }
 
+/*
+ * Shows / hides the sidebar depending upon the action specified
+ * 
+ * @method sidebar
+ * @param {String} action Action to perform on the sidebar. Can be 'hide' or 'show'. 
+ */
+
 function sidebar(action)
 {
 	if(action == 'hide') {
-		//$('#nav').removeClass('shown');
-		//$('#nav').hide('slow', function() { resizeUI(); });
-		// Animate sidebar
 		$('#nav').animate({left:-1000}, 1000, function() { $(this).hide(); resizeUI();});
 	}
 	else {
-		//$('#nav').addClass('shown');
 		resizeUI();
-		//$('#nav').show('slow');
 		$('#nav').show();
 		$('#nav').animate({left:0}, 1000);
 	}
@@ -369,6 +364,12 @@ function resizeUI()
 	}
 }
 
+/*
+ * Shows a 'Loading' throbber inside the context
+ * 
+ * @method showThrobber
+ * @param {String} context The context where to place the throbber
+ */
 function showThrobber(context)
 {
 	content = '<div id="throbber" class="well"><p>Loading....</p>'+
@@ -385,7 +386,12 @@ function hideThrobber()
 /*
  * Converts the given container to inline by adding classes defined 
  * in the custom attribute 'data-inline-class'
+ * It places the value of the custom attribute data-inline-class for all the child elements
+ * into their class attribute
  * NOTE: It does not alter the visibility of the container
+ * 
+ * @method convertToInline
+ * @param {String} container Container that is to be converted to inline
  */
 function convertToInline(container)
 {
@@ -401,7 +407,12 @@ function convertToInline(container)
 /*
  * Converts the given container to modal by adding classes defined 
  * in the custom attribute 'data-modal-class'
+ * It places the value of the custom attribute data-modal-class for all the child elements
+ * into their class attribute
  * NOTE: It does not alter the visibility of the container
+ * 
+ * @method convertToModal
+ * @param {String} container Container that is to be converted to modal
  */
 
 function convertToModal(container)
@@ -414,14 +425,25 @@ function convertToModal(container)
 	});
 }
 
-//Clear the input boxes
+/*
+ * Clears all input (type text and hidden) under the parent
+ * 
+ * @method clearInput
+ * @param {String} parent Parent that contains inputs that are to be cleared
+ */
 function clearInput(parent)
 {
 	$(parent+' input[type=text], '+parent+' input[type=hidden]').val('');
 }
 
 
-//Get ID
+/*
+ * Parses strings in the format 'a-b-id' and returns the stripped id
+ * 
+ * @method getID
+ * @param {String} id The ID to parse
+ * @return {Integer} Parsed ID
+ */
 function getID(id) {
 	id = id.split('-');
 	id = id[id.length-1];
@@ -437,19 +459,23 @@ function getID(id) {
 
 // TODO: Is this a good way to get the server's IP?
 SERVER = window.location.host;
-//URL = "http://"+SERVER+"/server-pdo/index.php";
 URL = SERVER;
 
+/*
+ * Logs out by sending a /logout REST call and redirects the page to the root '/'
+ *
+ */
 function logout()
 {
 	$.getJSON(URL+'/logout', function(data) {
-		window.location.reload(true);
+		window.location.href = '/';
 	});
 }
 
 /*
  * Test a REST call. Used for testing if an app is installed on the device or not
- * Returns true on success or false on error
+ * @param {String} call The call to send to the server
+ * @return {Boolean} Returns true on success and false on failure
  */
 function testCall(call)
 {
