@@ -109,8 +109,8 @@ function initialize() {
 	}
 	
 	$.each(APPS, function(index, value) {
-	    text = '<label><input id="settingShow-'+value['name']+'" type="checkbox"/>&nbsp;'+value['title']+'</input></label>';
-	    $('#settingShowApplications').append(text);
+	    //text = '<label><input id="settingShow-'+value['name']+'" type="checkbox"/>&nbsp;'+value['title']+'</input></label>';
+	    //$('#settingShowApplications').append(text);
 	    $('<link>').attr('rel', 'stylesheet')
 	    .attr('href', 'apps/'+value['name']+'/style.css')
 	    .attr('type', 'text/css')
@@ -234,6 +234,8 @@ function switchTo(id) {
 }
 
 function addApplication(app) {
+	text = '<label><input id="settingShow-'+app['name']+'" type="checkbox"/>&nbsp;'+app['title']+'</input></label>';
+    $('#settingShowApplications').append(text);
 	li = '<li><a href="#" id="nav-'+app['name']+'" data-switch="'+app['name']+'" title="'+app['title']+'"><img src="'+app['icon-small']+'"/>'+app['title']+'</a></li>';
 	$('#nav .nav-list').append(li);
 	tr = '<tr><td><a href="#" data-switch="'+app['name']+'" title="'+app['title']+'"><img src="'+app['icon-big']+'"/>'+app['title']+'</a></td></tr>';

@@ -129,11 +129,6 @@
 		$(document).on('submit', '#form-modal-add-item', function() {
 			item = formToItem('#form-modal-add-item');
 			
-			/*if(item.item_name == "") {
-				notify('Item name cannot be empty!', 'alert-error', true, '#modal-add-item .modal-body');
-				return false;
-			}*/
-			
 			// Check if we're updating or adding a new item
 			if($('#btn-update-item').is(':visible'))
 			{

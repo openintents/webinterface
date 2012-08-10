@@ -481,3 +481,10 @@ a.disabled {
 		margin-left: 25%;
 	}
 }
+
+/* Large screen desktops */
+@media (min-width: 979px) {
+	#footer {
+		height: 3.6em;
+	}
+}
