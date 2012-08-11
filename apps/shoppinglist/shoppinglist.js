@@ -502,7 +502,10 @@
 		$('#shoppinglist-items tbody').html('');
 		$.getJSON(call, function(data) {
 			for(d in data) {
-				insertItem(data[d]);
+				// Since price is stored in cents on the server, convert it to dollars
+				item = data[d];
+				item.item_price = item.item_price / 100;
+				insertItem(item);
 			}
 			hideThrobber();
 		});
