@@ -176,7 +176,7 @@ function setupEvents() {
 		refreshUI();
 	});
 	
-	$('#menuLogout').click(function() {
+	$('.menuLogout').click(function() {
 			logout();		
 	});
 	
@@ -469,7 +469,7 @@ URL = SERVER;
  */
 function logout()
 {
-	$.getJSON(URL+'/logout', function(data) {
+	$.get('/logout', function(data) {
 		window.location.href = '/';
 	});
 }
