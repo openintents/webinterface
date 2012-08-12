@@ -125,11 +125,8 @@
 		$(document).on('click', '.button-note-add', function() {
 			if(screen.width >= 979) { // Desktop
 				convertToModal('#add-note-modal');
-				//$('#add-note-modal').addClass('modal');
 				$('#add-note-modal').modal();
 				$('#add-note-modal').on('hidden', function() {
-					//$('#add-note-modal').removeClass('modal');
-					//$('#form-note-add input, #form-note-add textarea').val('');
 					clearInput('#form-note-add');
 				});
 			}

@@ -4,6 +4,10 @@ html, body {
 	height: 100%;
 }
 
+body {
+	background-image: none;
+}
+
 a.disabled {
 	pointer-events: none;
 	cursor: default;

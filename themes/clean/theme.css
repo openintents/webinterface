@@ -2,6 +2,7 @@ body {
 	background-color: #fff;
 	color: #111;
 	font-family: Droid Sans, Arial, Deja Vu Sans, Sans;
+	background-image: none;
 }
 
 a, a:visited {

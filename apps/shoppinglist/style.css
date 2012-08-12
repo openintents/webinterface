@@ -21,7 +21,7 @@
 
 #shoppinglist-items-table-wrap, .fixed-height-table-wrap {
 	max-height: 25em;
-	overflow-y: auto;
+	overflow: auto;
 	margin-top: 1em;
 }
 
