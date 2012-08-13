@@ -20,6 +20,7 @@
 			$('#content').append(data);
 			
 			$('#shoppinglist-items').tablesorter();
+			$('#shoppinglist-items-compact').tablesorter();
 			$('#shoppinglist-list-manage').tablesorter();
 			
 			//Initialize popovers
@@ -52,8 +53,9 @@
 		$(document).on('click', '.item-action-edit', function() {
 			id = $(this).parent().attr('id');
 			if(typeof id === "undefined") return true;
-			id = id.split('-');
-			id = id[id.length-1]
+			//id = id.split('-');
+			//id = id[id.length-1]
+			id = getID(id);
 			editItem(id);
 			return false;
 		});
@@ -144,12 +146,15 @@
 		});
 		
 		// Sort helper for checked items and updating of items
-		$(document).on('change', '#shoppinglist-items input[type=checkbox]', function(e) {
-				var checked = (this.checked)?1:0;
-				$($(this).parent().children('span')[0]).html(checked);
+		$(document).on('change', 'input[type=checkbox][class^=item-check-]', function(e) {
+				var checked = (this.checked)?2:1;
+				$('span[class^=item-check-]').html(checked);
+				//$($(this).parent().children('span')[0]).html(checked);
 				$('#shoppinglist-items').trigger('update');
+				$('#shoppinglist-items-compact').trigger('update');
 				
-				id = getID($(this).attr('id'));
+				id = getID($(this).attr('class'));
+				$('.item-check-'+id).prop('checked', checked);
 				item = getItem('#item-', id);
 				console.log(item);
 				console.log(id);
@@ -230,6 +235,12 @@
 		  refreshLists();
 	}
 	
+	/**
+	 * Loads the shopping list specified by the ID
+	 * 
+	 * @method loadList
+	 * @param {Integer} id ID of the list to load
+	 */
 	function loadList(id) {
 		items = getList(id);
 		$('#shoppinglist-list-manage-container').slideUp(function() {
@@ -243,6 +254,13 @@
 		refreshItems();
 	}
 	
+	/**
+	 * Inserts the list into the list selection box as well as the list management table
+	 * 
+	 * @method insertList
+	 * @param {Integer} id ID of the list
+	 * @param {String} name Name of the list
+	 */
 	function insertList(id, name) {
 		list = '<option value="'+id+'">'+name+'</option>';
 		$('#shoppinglist-list option[value=-1]').remove();
@@ -257,6 +275,13 @@
 		}
 		$('#shoppinglist-list-manage').trigger('update');
 	}
+	
+	/**
+	 * Inserts a shopping list item to the shopping list item's table
+	 * 
+	 * @method insertItem
+	 * @param {Item} item Item object containing item information
+	 */
 	
 	function insertItem(item)
 	{
@@ -280,9 +305,9 @@
 			item.list_id = getCurrentList();
 		
 		append = '<tr id="item-'+item.item_id+'">'+
-			'<td><span id="item-status-'+item.item_id+'" class="hide">'+item.status+'</span>'+
+			'<td><span class="item-status-'+item.item_id+' hide">'+item.status+'</span>'+
 			'<span id="item-list-id-'+item.item_id+'" class="hide">'+item.list_id+'</span>'+
-			'<input id="item-check-'+item.item_id+'" type="checkbox"/></td>'+
+			'<input class="item-check-'+item.item_id+'" type="checkbox"/></td>'+
 			'<td id="item-priority-'+item.item_id+'">'+item.priority+'</td>'+
 			'<td id="item-name-'+item.item_id+'">'+item.item_name+'</td>'+
 			'<td id="item-price-'+item.item_id+'">'+item.item_price+'</td>'+
@@ -294,34 +319,68 @@
 			'</ul></td></tr>';
 		
 		$('#shoppinglist-items tbody').append(append);	 
-		if(item.status == 2)
-			$('#item-check-'+item.item_id).prop('checked', true);
-		$('#shoppinglist-items').trigger('update');
 		
+		append = '<tr><td><span class="item-status-%id% hide">%status%</span><input class="item-check-%id%" type="checkbox"/></td>'+
+					'<td><sup>-%priority%-</sup><sub>%tags%</sub>%quantity% %units% %name%<sub>%price%</sub></td>';
+		append += '<td><ul class="list-inline">'+
+		'<li><a id="item-action-edit-%id%" href="#" title="Edit" class="item-action-edit"><i class="icon-pencil item-action-edit"></i></a></li>'+
+		'<li><a id="item-action-delete-%id%" href="#" title="Delete" class="item-action-delete"><i class="icon-remove item-action-delete"></i></a></li>'+
+		'</ul></td></tr>';
+		
+		append = append.replace(/%id%/g, item.item_id);
+		append = append.replace(/%status%/g, item.status);
+		append = append.replace(/%priority%/g, item.priority);
+		append = append.replace(/%tags%/g, item.item_tags);
+		append = append.replace(/%quantity%/g, item.quantity);
+		append = append.replace(/%units%/g, item.item_units);
+		append = append.replace(/%name%/g, item.item_name);
+		append = append.replace(/%price%/g, item.item_price);
+		
+		$('#shoppinglist-items-compact tbody').append(append);
+		
+		if(item.status == 2) {
+			$('.item-check-'+item.item_id).prop('checked', true);
+		}
+		$('#shoppinglist-items').trigger('update');
+		$('#shoppinglist-items-compact').trigger('update');
 	}
 	
+	/**
+	 * Display's an edit item dialog depengind upon the device resolution
+	 * 
+	 * @method editItem
+	 * @param {Integer} id ID of the item to edit
+	 */
 	function editItem(id)
 	{
 		item = getItem('#item-', id);
 		
 		if(screen.width >= 979 || window.screen.availWidth >= 979) {
 			container = '#add-item-';
-			$('#modal-add-item').addClass('modal');
+			//$('#modal-add-item').addClass('modal');
+			convertToModal('#modal-add-item');
 			$('#modal-add-item').modal('show');
-			$('#modal-add-item #btn-add-item').hide();
-			$('#modal-add-item #btn-update-item').show();
-			
-			itemToForm(item, '#form-modal-add-item');
 		}
 		else {
-			container = '#inline-add-item-';
-			$('#inline-add-item').slideDown();
-			$('#inline-btn-add-item').hide();
-			$('#inline-btn-update-item').show();
-			itemToForm(item, '#form-inline-add-item');
+			convertToInline('#modal-add-item');
+			//container = '#inline-add-item-';
+			$('#modal-add-item').slideDown();
+			//$('#inline-btn-add-item').hide();
+			//$('#inline-btn-update-item').show();
+			//itemToForm(item, '#form-inline-add-item');
 		}
+		
+		itemToForm(item, '#form-modal-add-item');
+		$('#modal-add-item #btn-add-item').hide();
+		$('#modal-add-item #btn-update-item').show();
 	}
 	
+	/**
+	 * Displays an edit dialog for editing a list
+	 * 
+	 * @method editList
+	 * @param {Integer} id ID of the list to edit
+	 */
 	function editList(id) 
 	{
 		$('#sl-dialog-new-list .modal-header h3').text('Rename List');
@@ -349,7 +408,7 @@
 		}
 		else {
 			convertToInline('#sl-dialog-new-list');
-			$('#sl-form-new-list').slideDown();
+			$('#sl-dialog-new-list').slideDown();
 		}
 		$('#sl-form-new-list input[name=name]').focus();
 		
@@ -366,16 +425,35 @@
 		clearInput('#sl-form-new-list');
 	}
 	
+	/**
+	 * Get's the currently selected list ID
+	 * 
+	 * @method getCurrentList
+	 * @return {Integer} ID of the currently selected list
+	 */
 	function getCurrentList()
 	{
 		return $('#shoppinglist-list').val();
 	}
 	
+	/**
+	 * Selects the list specified by the ID
+	 * 
+	 * @method selectList
+	 * @param {Integer} id ID of the list to select
+	 */
 	function selectList(id)
 	{
 		$('#shoppinglist-list').val(id);
 	}
 	
+	/**
+	 * Returns an object of the list specified by the ID
+	 * 
+	 * @method getList
+	 * @param {Integer} id ID of the list to get the object of
+	 * @return {List} List object of the list ID
+	 */
 	function getList(id) {
 		list = {};
 		list.name = $('#shoppinglist-list-manage #list-list-'+id).text();
@@ -383,6 +461,14 @@
 		return list;
 	}
 	
+	/**
+	 * Returns an Item object of the item
+	 * 
+	 * @method getItem
+	 * @param {String} namespace Namespace prefix of the item (Could be a jQuery selector)
+	 * @param {Integer} id ID of the item
+	 * @return {Item} Item object for the specific ID
+	 */
 	function getItem(namespace, id) 
 	{
 		item = {};
@@ -412,6 +498,13 @@
 		return item;
 	}
 	
+	/**
+	 * Converts a form to an Item object
+	 * 
+	 * @method formToItem
+	 * @param {String} form Form selector
+	 * @return {Item} Item object
+	 */
 	function formToItem(form)
 	{
 		item = {};
@@ -428,6 +521,13 @@
 		return item;
 	}
 	
+	/**
+	 * Fills up a form with an item object
+	 * 
+	 * @method itemToForm
+	 * @param {Item} item Item object
+	 * @param {String} form Form selector of the form to fill
+	 */
 	function itemToForm(item, form)
 	{
 		$(form+' input[name=item_id]').val(item.item_id);
@@ -441,39 +541,18 @@
 		$(form+' input[name=list_id]').val(item.list_id);
 	}
 	
-	function isTouchDevice(){
-		try{
-			document.createEvent("TouchEvent");
-			return true;
-		}catch(e){
-			return false;
-		}
-	}
-	
-	function touchScroll(id){
-		if(isTouchDevice()){ //if touch events exist...
-			var el=document.getElementById(id);
-			var scrollStartPos=0;
-	
-			document.getElementById(id).addEventListener("touchstart", function(event) {
-				scrollStartPos=this.scrollTop+event.touches[0].pageY;
-				event.preventDefault();
-			},false);
-	
-			document.getElementById(id).addEventListener("touchmove", function(event) {
-				this.scrollTop=scrollStartPos-event.touches[0].pageY;
-				event.preventDefault();
-			},false);
-		}
-	}
-	
 	/* *
 	 * 
 	 * AJAX functions 
 	 * 
 	 * */
 	
-	
+	/**
+	 * Refresh the lists from the server
+	 * 
+	 * @method refreshLists
+	 * @param {Integer} select List to select after the refresh
+	 */
 	function refreshLists(select) {
 		
 		$.getJSON('/shoppinglist/list/get', function(data) {
@@ -489,6 +568,12 @@
 		});
 	}
 	
+	/**
+	 * Refresh the items of the specified listID from the server
+	 * 
+	 * @method refreshItems
+	 * @param {Integer} listID ID of the list to get the items of
+	 */
 	function refreshItems(listID) {
 		showThrobber('#content-shoppinglist');
 		call = '/shoppinglist/item/get?list=';
@@ -499,7 +584,8 @@
 			call = call + listID;
 		}
 		
-		$('#shoppinglist-items tbody').html('');
+		$('#shoppinglist-items tbody, #shoppinglist-items-compact tbody').html('');
+		
 		$.getJSON(call, function(data) {
 			for(d in data) {
 				// Since price is stored in cents on the server, convert it to dollars
@@ -511,6 +597,12 @@
 		});
 	}
 	
+	/**
+	 * Creates a new item
+	 * 
+	 * @method slNewItem
+	 * @param {Item} item Item object to create
+	 */
 	function slNewItem(item) {
 		$.post("/shoppinglist/item/update", item, function() {
 			notify('New item added successfully!', 'alert-success');
@@ -518,6 +610,13 @@
 		});
 	}
 	
+	/**
+	 * Updates the item
+	 * 
+	 * @method slUpdateItem
+	 * @param {Item} item Item object to update
+	 * @param {Boolean} refresh If true, refreshes the items by calling refreshItems automatically. (Default: true)
+	 */
 	function slUpdateItem(item, refresh) {
 		$.post("/shoppinglist/item/update", item, function() {
 			if(typeof refresh === "undefined" || refresh == true) {
@@ -527,7 +626,12 @@
 		});
 	}
 	
-	
+	/**
+	 * Deletes the item specified by ID
+	 * 
+	 * @method slDeleteItem
+	 * @param {Integer} id ID of the item to delete
+	 */
 	function slDeleteItem(id)
 	{
 		$.get("/shoppinglist/item/delete?id="+id, function() {
@@ -536,6 +640,12 @@
 		});
 	}
 	
+	/**
+	 * Creates a new list
+	 * 
+	 * @method slNewList
+	 * @param {List} list Name of the list to create
+	 */
 	function slNewList(list)
 	{
 		$.get("/shoppinglist/list/new?name="+list, function() {
@@ -544,6 +654,13 @@
 		});
 	}
 	
+	/**
+	 * Renames a list
+	 * 
+	 * @method slRenameList
+	 * @param {Integer} id ID of the list to rename
+	 * @param {String} newName New name of the list
+	 */
 	function slRenameList(id, newName)
 	{
 		$.get("/shoppinglist/list/rename?id="+id+"&newname="+newName, function() {
@@ -552,6 +669,12 @@
 		});
 	}
 	
+	/**
+	 * Deletes a list specified by id
+	 * 
+	 * @method slDeleteLIst
+	 * @param {Integer} id ID of the list to delete
+	 */
 	function slDeleteList(id)
 	{
 		$.get("/shoppinglist/list/delete?id="+id, function() {

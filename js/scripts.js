@@ -3,6 +3,11 @@ APPS = { notepad : {name : 'notepad', title : 'OI Notepad'},
 	 shoppinglist : { name : 'shoppinglist', title : 'OI Shopping List'}
 };
 
+var ua = navigator.userAgent.toLowerCase();
+var isAndroid = ua.indexOf("android") > -1;
+
+// Uncomment the line below to disable console logging
+//if(window.console || console) console = {log: function() {}};
 
 // Disable AJAX caching, since it leads to problems on webkit browsers
 $.ajaxSetup({
@@ -39,6 +44,21 @@ head.ready(function() {
 	$('#menuToggleSidebar, #menuToggleSidebarMobile, #sidebar-toggle button').click(function() {
 		toggleSidebar();
 	});
+	
+	if(isAndroid) { // Apply Android specific stuff here
+		// TODO: Possible fix for wild scrolling in Android. Needs more testing.
+		
+		/*$('input').css('outline', 'none');
+		$(document).on('focus', 'input[type=text], textarea', function() {
+			$(document.body).css('overflow', 'hidden');
+			$(document.body).scrollTo($(this));
+			$(document.body).attr('data-scroll-top', $(window).scrollTop());
+		});
+		$(document).on('blur', 'input[type=text], textarea', function() {
+			$(document.body).css('overflow', 'auto');
+			//$(window).scrollTop($(document.body).attr('data-scroll-top'));
+		});*/
+	}
 	
 	//Hide the loading screen
 	$('.lightbox_bg').hide();
@@ -108,6 +128,12 @@ function initialize() {
 		Settings.set('theme', 'default');
 	}
 	
+	if(typeof set['enableAnimations'] == 'undefined') {
+		Settings.set('enableAnimations', true);
+	}
+	else if(set['enableAnimations'] == false)
+		$.fx.off = true;
+	
 	$.each(APPS, function(index, value) {
 	    //text = '<label><input id="settingShow-'+value['name']+'" type="checkbox"/>&nbsp;'+value['title']+'</input></label>';
 	    //$('#settingShowApplications').append(text);
@@ -122,6 +148,12 @@ function initialize() {
 	$(document.body).trigger('initialize');
 }
 
+/**
+ * Append a script to the body tag
+ * 
+ * @method addScript
+ * @param {String} url URL of the script
+ */
 function addScript(url){
         // add script
         var script   = document.createElement("script");
@@ -133,11 +165,20 @@ function addScript(url){
         //document.body.removeChild(document.body.lastChild);
 }
 
-
+/**
+ * Triggers the 'setupUI' event
+ * 
+ * @method setupUI
+ */
 function setupUI() {
 	$(document.body).trigger('setupUI');
 }
 
+/**
+ * Sets up events for the whole interface and sends the setupEvents trigger
+ * 
+ * @method setupEvents
+ */
 function setupEvents() {
 	
 	$(document).on('click', 'a[data-switch], button[data-switch]', function(event) {
@@ -151,6 +192,7 @@ function setupEvents() {
 	});
 	
 	// Show mobile-friendly version of the settings dialog
+	//TODO: Utilize the convertToModal and convertToInline functions here
 	$('.showSettingsMobile').click(function() {
 		if($('#settings').is(':visible')) {
 			$('#settings').slideUp();
@@ -158,7 +200,7 @@ function setupEvents() {
 		else {
 			$('#settings').removeClass('modal');
 			$('#settings').slideDown();
-			$('#settingsClose').click(function() { $('#settings').slideUp(); $(this).off(); });
+			$('#settingsClose').click(function() { $('#menu-mobile .nav-collapse').collapse('hide'); $('#settings').slideUp(); $(this).off(); });
 		}
 	});
 	
@@ -173,6 +215,9 @@ function setupEvents() {
 		Settings.set('theme', theme);
 		Settings.set('showSidebar', $('#settingShowSidebar').is(':checked'));
 		$('#settings').modal('hide');
+		Settings.set('enableAnimations', $('#settingEnableAnimations').is(':checked'));
+		$('#menu-mobile .nav-collapse').collapse('hide');
+		$('#settings').slideUp();
 		refreshUI();
 	});
 	
@@ -183,6 +228,12 @@ function setupEvents() {
 	$(document.body).trigger('setupEvents');
 }
 
+/**
+ * Refreshes the UI, which includes getting the settings and modifying the UI based on the settings
+ * Also sends the 'refreshUI' trigger
+ * 
+ * @method refreshUI
+ */
 function refreshUI() {
 	set = Settings.get();
 	
@@ -193,6 +244,13 @@ function refreshUI() {
 	else {
 		sidebar('show');
 	}
+	
+	if(set['enableAnimations'] == true)
+		$.fx.off = false;
+	else
+		$.fx.off = true;
+	
+	$('#settingEnableAnimations').prop('checked', set['enableAnimations']);
 	
 	$('#settingThemeSelect').val(''+set['theme']);
 
@@ -211,6 +269,13 @@ function refreshUI() {
 	resizeUI();
 }
 
+/**
+ * Switches to an application based on it's ID (eg: OI Notepad has the ID of 'notepad').
+ * Also triggers the 'appid-switched' event where 'appid' is replaced by the application's ID
+ * 
+ * @method switchTo
+ * @param {String} id ID of the application to switch to
+ */
 function switchTo(id) {
 	
 	navid = "#nav-"+id;
@@ -233,6 +298,12 @@ function switchTo(id) {
 	$(document.body).trigger(id+'-switched');
 }
 
+/**
+ * Adds / Registers an application to the interface.
+ * It takes an 'app' object as a parameter which contains information about the application
+ * 
+ * @param {Application} app Object containing information about the application to be added
+ */
 function addApplication(app) {
 	text = '<label><input id="settingShow-'+app['name']+'" type="checkbox"/>&nbsp;'+app['title']+'</input></label>';
     $('#settingShowApplications').append(text);
@@ -247,7 +318,7 @@ function removeActiveClass() {
 	$('.nav-active').removeClass('nav-active');
 }
 
-/*
+/**
  * Displays a small notification on the top of the screen
  * 
  * @method notify
@@ -296,7 +367,7 @@ function hideMenu()
 	return true;
 }
 
-/*
+/**
  * Toggles sidebar. Calls refreshUI when done
  * 
  * @method toggleSidebar
@@ -319,7 +390,7 @@ function toggleSidebar()
 	refreshUI();
 }
 
-/*
+/**
  * Shows / hides the sidebar depending upon the action specified
  * 
  * @method sidebar
@@ -338,8 +409,11 @@ function sidebar(action)
 	}
 }
 
-// Resize interface, applying various classes
-
+/**
+ *  Resize interface, applying various classes
+ *  
+ *  @method resizeUI
+ */
 function resizeUI()
 {
 	if($('#nav').is(':visible')) // Navbar is Shown
@@ -366,7 +440,7 @@ function resizeUI()
 	}
 }
 
-/*
+/**
  * Shows a 'Loading' throbber inside the context
  * 
  * @method showThrobber
@@ -380,12 +454,17 @@ function showThrobber(context)
 	$(context).append(content);
 }
 
+/**
+ * Hides throbber
+ * 
+ * @method hideThrobber
+ */
 function hideThrobber()
 {
 	$('#throbber').remove();
 }
 
-/*
+/**
  * Converts the given container to inline by adding classes defined 
  * in the custom attribute 'data-inline-class'
  * It places the value of the custom attribute data-inline-class for all the child elements
@@ -406,7 +485,7 @@ function convertToInline(container)
 }
 
 
-/*
+/**
  * Converts the given container to modal by adding classes defined 
  * in the custom attribute 'data-modal-class'
  * It places the value of the custom attribute data-modal-class for all the child elements
@@ -427,7 +506,7 @@ function convertToModal(container)
 	});
 }
 
-/*
+/**
  * Clears all input (type text and hidden) under the parent
  * 
  * @method clearInput
@@ -439,7 +518,7 @@ function clearInput(parent)
 }
 
 
-/*
+/**
  * Parses strings in the format 'a-b-id' and returns the stripped id
  * 
  * @method getID
@@ -452,20 +531,54 @@ function getID(id) {
 	return id;
 }
 
+/**
+ * Checks if the device is a touch enabled device or not
+ * @return {Boolean}
+ */
+function isTouchDevice(){
+	try{
+		document.createEvent("TouchEvent");
+		return true;
+	}catch(e){
+		return false;
+	}
+}
+
+/**
+ * Enables scrolling of overflow elements on the touch device
+ * @param {String} id ID of the element to enable touch scrolling on (Note: ID should be a JavaScript ID and not a jQuery ID)
+ */
+function touchScroll(id){
+	if(isTouchDevice()){ //if touch events exist...
+		var el=document.getElementById(id);
+		var scrollStartPos=0;
+
+		document.getElementById(id).addEventListener("touchstart", function(event) {
+			scrollStartPos=this.scrollTop+event.touches[0].pageY;
+			//event.preventDefault();
+		},false);
+
+		document.getElementById(id).addEventListener("touchmove", function(event) {
+			this.scrollTop=scrollStartPos-event.touches[0].pageY;
+			event.preventDefault();
+		},false);
+	}
+}
 /* 
  * 
  * AJAX Methods
  * 
  * 
-*/
+ */
 
 // TODO: Is this a good way to get the server's IP?
 SERVER = window.location.host;
 URL = SERVER;
 
-/*
+/**
  * Logs out by sending a /logout REST call and redirects the page to the root '/'
  *
+ * @method logout
  */
 function logout()
 {
@@ -474,8 +587,10 @@ function logout()
 	});
 }
 
-/*
+/**
  * Test a REST call. Used for testing if an app is installed on the device or not
+ * 
+ * @method testCall
  * @param {String} call The call to send to the server
  * @return {Boolean} Returns true on success and false on failure
  */

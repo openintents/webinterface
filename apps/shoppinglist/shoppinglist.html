@@ -46,24 +46,6 @@
 						Add Item
 				</button>
 			</div>
-			<!-- <div id="inline-add-item" class="hide">
-				<form id="form-inline-add-item">
-					<table>
-						<tbody>
-							<tr><td><label>Name: <input id="inline-add-item-name" type="text" placeholder="Item"/></label></td></tr>
-							<tr><td><label>Priority: <input id="inline-add-item-priority" type="text" placeholder="Priority"/></label></td></tr>
-							<tr><td><label>Price:<input id="inline-add-item-price" type="text" placeholder="Price"/></label></td></tr>
-							<tr><td><label>Quantity:<input id="inline-add-item-quantity" type="text" placeholder="Quantity"/></label></td>
-							<td><label>Units:<input id="inline-add-item-units" type="text" placeholder="Units"/></label></td></tr>
-							<tr><td><label>Tags:<input id="inline-add-item-tags" type="text" placeholder="Tags"/></label></td></tr>
-						</tbody>
-					</table>
-					<a href="#" id="inline-btn-cancel" class="btn" data-dismiss="modal">Cancel</a>
-					<button id="inline-btn-add-item" class="btn btn-primary">Add</button>
-					<button id="inline-btn-update-item" class="btn btn-primary">Update</button>
-					<input type="hidden" id="inline-add-item-id"/>
-				</form>
-			</div> -->
 			<div id="modal-add-item" class="hide">
 				<div class="modal-header" data-modal-class="modal-header" data-inline-class="inline-header">
 					<button type="button" class="close hidden-phone" data-dismiss="modal">×</button>
@@ -92,7 +74,7 @@
 				</form>
 			</div> <!--  #moda-add-item -->
 			<div id="shoppinglist-items-table-wrap">
-				<table id="shoppinglist-items" class="table-list tablesorter">
+				<table id="shoppinglist-items" class="table-list tablesorter hidden-phone">
 					<thead>
 						<tr>
 						    <th class="completed"><a href="#">#</a></th>
@@ -101,6 +83,17 @@
 						    <th class="price"><a href="#">Price</a></th>
 						    <th class="qty"><a href="#">Qty/Units</a></th>
 						    <th class="tags"><a href="#">Tags</a></th>
+						    <th class="action"><a href="#">Action</a></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				<table id="shoppinglist-items-compact" class="table-list tablesorter visible-phone">
+					<thead>
+						<tr>
+						    <th class="completed"><a href="#">#</a></th>
+						    <th class="item"><a href="#">Item</a></th>
 						    <th class="action"><a href="#">Action</a></th>
 						</tr>
 					</thead>
