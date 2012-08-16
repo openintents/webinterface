@@ -1,5 +1,10 @@
 // Contains script specific to OI Notepad
 // Setup a namespace for Notepad, it's bad to add all of this to the global namespace
+/**
+ * Notepad class. Contains functions related to OI Notepad. 
+ * 
+ * @class Notepad
+ */
 (function(Notepad, $, undefined) {
 
 	// Bind triggers
@@ -238,6 +243,16 @@
 		}
 	}
 	
+	/**
+	 * Inserts a note into the OI Notepad table
+	 * 
+	 * @method insertNote
+	 * @param {Integer} id ID of the note
+	 * @param {String} title Title of the note
+	 * @param {String} text Note contents
+	 * @param {String} createdDate Creation date of the note
+	 * @param {String} modifiedDate Modification of the note
+	 */
 	function insertNote(id, title, text, createdDate, modifiedDate)
 	{
 		note = $('#content-notepad .table-list tbody');
@@ -275,6 +290,11 @@
 		$('#form-note-add label.error').remove();
 	}
 	
+	/**
+	 * Refreshes the notes from the server
+	 * 
+	 * @method refreshNotes
+	 */
 	function refreshNotes()
 	{
 		showThrobber('#content-notepad');
@@ -313,6 +333,12 @@
 		});
 	}
 	
+	/**
+	 * Sorts the notes accordind to their modification time
+	 * 
+	 * @method sortNotes
+	 * @param {Array} notes Array of note objects to sort
+	 */
 	function sortNotes(notes)
 	{
 		var keys = [];
@@ -330,6 +356,12 @@
 		return keys;
 	}
 	
+	/**
+	 * Adds a new note
+	 * 
+	 * @method addNewNote
+	 * @param {Form} form Form to send to the server
+	 */
 	function addNewNote(form)
 	{
 		$.post('/notes/new', $(form).serialize(), function(data) {
@@ -349,6 +381,12 @@
 		}, 'json');
 	}
 	
+	/**
+	 * Updates a note
+	 * 
+	 * @method updateNote
+	 * @param {Integer} id ID of the note to update
+	 */
 	function updateNote(id)
 	{
 		postData = $('#note-edit-'+id+' form').serialize();
@@ -365,10 +403,18 @@
 		}, 'json');
 	}
 	
+	/**
+	 * Deletes a note specified by the ID
+	 * 
+	 * @method deleteNote
+	 * @param {Integer} id ID of the note to delete
+	 * @param {Boolean} notif If true, displays a notification if delete is successful (Default: True)
+	 * @param {Boolean} refresh If true refreshes the notes list by calling refreshNotes() on successful deletion of the note (Default: True)
+	 */
 	function deleteNote(id, notif, refresh)
 	{
 	        (typeof refresh === "undefined")?true:refresh;
-	        (typeof notify === "undefined")?true:notif;
+	        (typeof notif === "undefined")?true:notif;
 	
 	        $.get('/notes/delete?_id='+id, function(data) {
 	        		if(refresh) refreshNotes();

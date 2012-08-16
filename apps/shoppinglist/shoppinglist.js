@@ -1,6 +1,12 @@
 // Contains script specific to OI Shopping List
 
 // Setup a namespace for ShoppingList
+
+/**
+ * ShoppingList class. Contains functions related to OI Shopping List.
+ * 
+ * @class ShoppingList
+ */
 (function(ShoppingList, $, undefined) {
 	
 	// Bind triggers

@@ -1,4 +1,11 @@
 // Applications that will be loaded in the interface
+
+/**
+ * This class contains all the common functionality for the interface.
+ * All the functions and variables are in global namespace so they can be easily accessed by the various modules
+ * 
+ * @class Global
+ */
 APPS = { notepad : {name : 'notepad', title : 'OI Notepad'},
 	 shoppinglist : { name : 'shoppinglist', title : 'OI Shopping List'}
 };
@@ -302,6 +309,7 @@ function switchTo(id) {
  * Adds / Registers an application to the interface.
  * It takes an 'app' object as a parameter which contains information about the application
  * 
+ * @method addApplication
  * @param {Application} app Object containing information about the application to be added
  */
 function addApplication(app) {
