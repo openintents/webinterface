@@ -522,7 +522,7 @@ function convertToModal(container)
  */
 function clearInput(parent)
 {
-	$(parent+' input[type=text], '+parent+' input[type=hidden]').val('');
+	$(parent+' input[type=text], '+parent+' input[type=hidden], '+parent+' textarea').val('');
 }
 
 
