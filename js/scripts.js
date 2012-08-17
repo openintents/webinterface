@@ -541,7 +541,7 @@ function getID(id) {
 
 /**
  * Checks if the device is a touch enabled device or not
- * @return {Boolean}
+ * @return {Boolean} True if the device is a touch device
  */
 function isTouchDevice(){
 	try{
