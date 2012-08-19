@@ -154,12 +154,14 @@
 		// Sort helper for checked items and updating of items
 		$(document).on('change', 'input[type=checkbox][class^=item-check-]', function(e) {
 				var checked = (this.checked)?2:1;
-				$('span[class^=item-check-]').html(checked);
+				id = getID($(this).attr('class'));
+				
+				$('span[class^=item-status-'+id+']').html(checked);
 				//$($(this).parent().children('span')[0]).html(checked);
 				$('#shoppinglist-items').trigger('update');
 				$('#shoppinglist-items-compact').trigger('update');
 				
-				id = getID($(this).attr('class'));
+				
 				$('.item-check-'+id).prop('checked', this.checked);
 				item = getItem('#item-', id);
 				//console.log(item);
@@ -314,7 +316,7 @@
 		if(item.status == 3) return;
 		
 		append = '<tr id="item-'+item.item_id+'">'+
-			'<td><span class="item-status-'+item.item_id+' hide">'+item.status+'</span>'+
+			'<td><span id="item-status-'+item.item_id+'" class="item-status-'+item.item_id+' hide">'+item.status+'</span>'+
 			'<span id="item-list-id-'+item.item_id+'" class="hide">'+item.list_id+'</span>'+
 			'<input class="item-check-'+item.item_id+'" type="checkbox"/></td>'+
 			'<td id="item-priority-'+item.item_id+'">'+item.priority+'</td>'+
@@ -329,7 +331,7 @@
 		
 		$('#shoppinglist-items tbody').append(append);	 
 		
-		append = '<tr><td><span class="item-status-%id% hide">%status%</span><input class="item-check-%id%" type="checkbox"/></td>'+
+		append = '<tr><td><span id="item-status-%id%" class="item-status-%id% hide">%status%</span><input class="item-check-%id%" type="checkbox"/></td>'+
 					'<td><sup>-%priority%-</sup><sub>%tags%</sub>%quantity% %units% %name%<sub>%price%</sub></td>';
 		append += '<td><ul class="list-inline">'+
 		'<li><a id="item-action-edit-%id%" href="#" title="Edit" class="item-action-edit"><i class="icon-pencil item-action-edit"></i></a></li>'+
