@@ -67,7 +67,27 @@
 	margin-top: 10px;
 }
 
-/* Set max-height of shopping list table according to the screen height */
+/* Set max-height of shopping list table according to the screen height 
+   TODO: Find a better way to do this using percentages maybe?
+*/
+
+@media (max-height: 768px) {
+	#shoppinglist-items-table-wrap {
+		max-height: 25em;
+	}
+}
+
+@media (min-height: 768px) and (max-height: 800px) {
+	#shoppinglist-items-table-wrap {
+		max-height: 30em;
+	}
+}
+
+@media (min-height: 800px) {
+	#shoppinglist-items-table-wrap {
+		max-height: 35em;
+	}
+}
 
 @media (min-height: 900px) {
 	#shoppinglist-items-table-wrap {
