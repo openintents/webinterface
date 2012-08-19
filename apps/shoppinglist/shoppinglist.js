@@ -128,7 +128,7 @@
 			input.popover('hide');
 			name = input.val();
 			input.val('');
-			slNewItem({item_name:name, list_id:$('#shoppinglist-list option:first').val()});
+			slNewItem({item_name:name, list_id:getCurrentList()});
 			input.removeAttr('disabled');
 			return false;
 		});
