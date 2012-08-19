@@ -160,14 +160,15 @@
 				$('#shoppinglist-items-compact').trigger('update');
 				
 				id = getID($(this).attr('class'));
-				$('.item-check-'+id).prop('checked', checked);
+				$('.item-check-'+id).prop('checked', this.checked);
 				item = getItem('#item-', id);
-				console.log(item);
-				console.log(id);
-				if(checked)
+				//console.log(item);
+				//console.log(id);
+				/*if(checked)
 					item.status = 2;
 				else
-					item.status = 1;
+					item.status = 1;*/
+				item.status = checked;
 				slUpdateItem(item, false);
 		});
 		
@@ -309,6 +310,8 @@
 			item.item_tags = "";
 		if(typeof item.list_id === "undefined")
 			item.list_id = getCurrentList();
+		
+		if(item.status == 3) return;
 		
 		append = '<tr id="item-'+item.item_id+'">'+
 			'<td><span class="item-status-'+item.item_id+' hide">'+item.status+'</span>'+
