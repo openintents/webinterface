@@ -6,7 +6,8 @@
  * 
  * @class Global
  */
-APPS = { notepad : {name : 'notepad', title : 'OI Notepad'},
+APPS = { 
+	 notepad : {name : 'notepad', title : 'OI Notepad'},
 	 shoppinglist : { name : 'shoppinglist', title : 'OI Shopping List'}
 };
 
@@ -300,6 +301,13 @@ function switchTo(id) {
 	$(fromcontid).removeClass('content-active');
 	$(contentid).addClass('content-active');
 	$(contentid).focus();
+	
+	if(id == "home")
+		title = "OI Web Client - Home";
+	else
+		title = "OI Web Client - " + APPS[id].title.replace("OI ", ""); // TODO: Find a better way to do this
+	
+	$('#logo h2').text(title);
 	
 	// Call trigger for the app that has been switched to
 	$(document.body).trigger(id+'-switched');
