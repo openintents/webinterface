@@ -303,9 +303,9 @@ function switchTo(id) {
 	$(contentid).focus();
 	
 	if(id == "home")
-		title = "OI Web Client - Home";
+		title = "OI Web Client";
 	else
-		title = "OI Web Client - " + APPS[id].title.replace("OI ", ""); // TODO: Find a better way to do this
+		title = APPS[id].title;
 	
 	$('#logo h2').text(title);
 	
